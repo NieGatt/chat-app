@@ -13,7 +13,7 @@ export class JwtTokenHandler {
             sub: id,
             date: new Date(),
         }, this.accessTokenSecret, {
-            expiresIn: "10m"
+            expiresIn: "30m"
         })
     }
 
@@ -21,7 +21,7 @@ export class JwtTokenHandler {
         return jwt.sign({
             sub: id,
         }, this.verificationSecret, {
-            expiresIn: "2h"
+            expiresIn: "7d"
         })
     }
 

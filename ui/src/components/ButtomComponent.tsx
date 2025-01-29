@@ -12,7 +12,7 @@ export const ButtomComponent = ({
     return (
         <button 
         onClick={handleClick}
-        className={`mt-2 rounded w-full h-8 bg-zinc-500 text-center text-white hover:bg-zinc-400 flex justify-center items-center ${loading ? "bg-zinc-400 pointer-events-none" : ""}`}>
+        className={`mt-2 rounded w-full h-8 bg-teal-900 text-center text-white hover:opacity-80 flex justify-center items-center ${loading ? "bg-teal-950 pointer-events-none" : ""}`}>
             {
                 loading ? (
                     <AiOutlineLoading3Quarters className="animate-spin" />

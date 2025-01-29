@@ -8,12 +8,13 @@ datasource db {
 }
 
 model User {
-  id           String  @id @unique @db.VarChar(36)
-  pictureUrl  String?
-  pictureId   String?
-  name         String  @db.VarChar(50)
-  email        String  @unique @db.VarChar(50)
-  password     String? @db.VarChar(70)
-  verified     Boolean @default(false)
-  refreshToken String? @unique
+  id           String   @id @unique @db.VarChar(36)
+  pictureUrl   String?
+  pictureId    String?
+  name         String   @db.VarChar(50)
+  email        String   @unique @db.VarChar(50)
+  password     String?  @db.VarChar(70)
+  verified     Boolean  @default(false)
+  refreshToken String?  @unique
+  createdAt    DateTime @default(now())
 }
