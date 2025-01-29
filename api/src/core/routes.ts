@@ -1,10 +1,10 @@
 import "../utils/strategies/google";
 import { RegisterController } from "../modules/controller/RegisterController";
 import { LoginController } from "../modules/controller/LoginController";
-import { LogoutController } from "../modules/controller/logoutController";
+import { LogoutController } from "../modules/controller/LogoutController";
 import { ChangePassController } from "../modules/controller/ChangePassController";
 import { GoogleLoginController } from "../modules/controller/GoogleLoginController";
-import { ValidateController } from "../modules/controller/validateController";
+import { ValidateController } from "../modules/controller/ValidateController";
 import { SendVerificationController } from "../modules/controller/SendVerificationController";
 import { CookieMiddleware } from "../middlewares/CookieMiddleware";
 import { AuthMiddleware } from "../middlewares/AuthMiddleware";
@@ -14,6 +14,7 @@ import { fieldsSchema } from "../schemas/FieldsSchema";
 
 import passport from "passport";
 import express from "express";
+import { ReadUserDataController } from "../modules/controller/ReadUserDataControlelr";
 
 const router = express.Router();
 
@@ -63,6 +64,10 @@ router.put("/change-password",
     AuthMiddleware,
     ValidationDataMiddleware(fieldsSchema.pick({ password: true })),
     ChangePassController
+)
+
+router.get("/user",
+    standardLimiterMiddleware, CookieMiddleware, ReadUserDataController
 )
 
 export { router };

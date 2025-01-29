@@ -12,10 +12,14 @@ export const AuthMiddleware = async (
     const jwtTokenHandler = new JwtTokenHandler();
 
     const headers = req.headers.authorization
-    if (!headers) return next(new Unauthorized("Authorization header is missing"));
+
+    if (!headers)
+        return next(new Unauthorized("Authorization header is missing"));
 
     const verificationToken = headers.split(" ")[1]
-    if (!verificationToken) return next(new Unauthorized("Verification token is missing"))
+
+    if (!verificationToken)
+        return next(new Unauthorized("Verification token is missing"))
 
     try {
         const { sub } = jwtTokenHandler.verifyToken(verificationToken, secret) as { sub: string }

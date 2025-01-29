@@ -14,17 +14,23 @@ export const CookieMiddleware = async (
 
     const accessToken = req.cookies["Authorization"];
 
-    if (!accessToken) return next(new Unauthorized("Authorization cookie is missing"));
+    if (!accessToken) 
+        return next(new Unauthorized("Authorization cookie is missing"));
 
     try {
         const decoded = jwtTokenHandler.verifyToken(accessToken, secret) as { sub: string }
         const user = await prisma.user.findUnique({ where: { id: decoded.sub } })
 
-        if (!user?.refreshToken) return next(new Unauthorized("User not found."));
+        if (!user?.verified)
+            return next(new Unauthorized("User not verificed in the system"))
+
+        if (!user.refreshToken)
+            return next(new Unauthorized("User is logged out"));
+
         req.user = { id: decoded.sub }
-        
+
         next();
     } catch (error) {
-        return next(new Unauthorized("Authorization access failed"));
+        return next(new Unauthorized("Authorization token is invalid"));
     }
 };
