@@ -12,6 +12,8 @@ export const SignUp = () => {
     const [hidePassword, setHodePassword] = useState({ password: false, confirm: false })
 
     const url = "http://localhost:3000/register"
+    const redirect = "/congrats"
+
     const schema = fieldsSchema.pick({
         name: true,
         email: true,
@@ -28,7 +30,7 @@ export const SignUp = () => {
         statusCode,
         errors,
         register
-    } = UseAuthenticate<ISignUpUser>(schema, url)
+    } = UseAuthenticate<ISignUpUser>(schema, url, redirect)
 
     return (
         <section className="w-screen h-screen flex justify-center items-center">
@@ -69,6 +71,7 @@ export const SignUp = () => {
                     <input type={hidePassword.password ? "text" : "password"}
                         className="pl-1 pr-7 text-[12px] outline-none h-6 border-b border-teal-600 bg-zinc-100 bg-opacity-10 w-full"
                         placeholder="Password"
+                        {...register("password")}
                     />
                     <div
                         onClick={() => setHodePassword({ ...hidePassword, password: !hidePassword.password })}
@@ -88,6 +91,7 @@ export const SignUp = () => {
                     <input type={hidePassword.confirm ? "text" : "password"}
                         className="pl-1 pr-7 text-[12px] outline-none h-6 border-b border-teal-600 bg-zinc-100 bg-opacity-10 w-full"
                         placeholder="Confirm password"
+                        {...register("confirmPassword")}
                     />
                     <div
                         onClick={() => setHodePassword({ ...hidePassword, confirm: !hidePassword.confirm })}
@@ -114,7 +118,7 @@ export const SignUp = () => {
                 </p>
 
                 <h2 className="font-bold text-[12px] w-full text-center mt-1 mb-1">OR</h2>
-                <GoogleComponent />
+                <GoogleComponent message="Sign up with Google" />
             </form>
         </section>
     )
