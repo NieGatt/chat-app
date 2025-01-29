@@ -19,7 +19,7 @@ export const UseAuthenticate = <T extends FieldValues>(
         handleSubmit,
         formState: { errors }
     } = useForm<T>({
-        mode: "all",
+        mode: "onSubmit",
         resolver: zodResolver(schema)
     })
 

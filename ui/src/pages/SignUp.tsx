@@ -36,28 +36,28 @@ export const SignUp = () => {
         <section className="w-screen h-screen flex justify-center items-center">
             <form
                 onSubmit={submitHandler}
-                className="flex flex-col w-52 text-white">
+                className="flex flex-col w-56 text-white">
                 <h1 className="text-xl text-xl font-bold">SIGN UP</h1>
 
                 <div className="mt-3">
                     <input
-                        className="px-1 text-[12px] outline-none h-6 border-b border-teal-600 bg-zinc-100 bg-opacity-10 w-full"
-                        placeholder="Name"
+                        className={`px-1 text-[12px] outline-none h-6 border-b ${errors.name ? "border-red-400" : "border-teal-600"} bg-zinc-100 bg-opacity-10 w-full
+                        placeholder="Name`}
                         type="text"
                         {...register("name")}
                     />
-                    <p className="text-[10px] text-red-400">
+                    <p className="text-[9px] text-red-400">
                         {errors.name?.message}
                     </p>
                 </div>
 
-                <div>
+                <div className="mt-1">
                     <input
-                        className="px-1 text-[12px] outline-none h-6 border-b border-teal-600 bg-zinc-100 bg-opacity-10 w-full"
+                        className={`px-1 text-[12px] outline-none h-6 border-b ${errors.email ? "border-red-400" : "border-teal-600"} bg-zinc-100 bg-opacity-10 w-full`}
                         type="text" placeholder="Email address"
                         {...register("email")}
                     />
-                    <p className="text-[10px] text-red-400">
+                    <p className="text-[9px] text-red-400">
                         {errors.email
                             ? errors.email.message
                             : statusCode === 409
@@ -67,9 +67,9 @@ export const SignUp = () => {
                     </p>
                 </div>
 
-                <div className="relative">
+                <div className="relative mt-1">
                     <input type={hidePassword.password ? "text" : "password"}
-                        className="pl-1 pr-7 text-[12px] outline-none h-6 border-b border-teal-600 bg-zinc-100 bg-opacity-10 w-full"
+                        className={`pl-1 pr-7 text-[12px] outline-none h-6 border-b ${errors.password ? "border-red-400" : "border-teal-600"} bg-zinc-100 bg-opacity-10 w-full`}
                         placeholder="Password"
                         {...register("password")}
                     />
@@ -82,14 +82,14 @@ export const SignUp = () => {
                                 : <FaEyeSlash className="bg-zinc-100 bg-opacity-10" />
                         }
                     </div>
-                    <p className="text-[10px] text-red-400">
+                    <p className="text-[9px] text-red-400">
                         {errors.password?.message}
                     </p>
                 </div>
 
-                <div className="relative">
+                <div className="relative mt-1">
                     <input type={hidePassword.confirm ? "text" : "password"}
-                        className="pl-1 pr-7 text-[12px] outline-none h-6 border-b border-teal-600 bg-zinc-100 bg-opacity-10 w-full"
+                        className={`pl-1 pr-7 text-[12px] outline-none h-6 border-b ${errors.confirmPassword ? "border-red-400" : "border-teal-600"} bg-zinc-100 bg-opacity-10 w-full`}
                         placeholder="Confirm password"
                         {...register("confirmPassword")}
                     />
@@ -102,13 +102,17 @@ export const SignUp = () => {
                                 : <FaEyeSlash className="bg-zinc-100 bg-opacity-10" />
                         }
                     </div>
-                    <p className="text-[10px] text-red-400">
+                    <p className="text-[9px] text-red-400">
                         {errors.confirmPassword?.message}
                     </p>
                 </div>
 
                 <ButtomComponent loading={loading} />
-                <p className="text-center text-[10px] mt-1">
+
+                <h2 className="font-bold text-[12px] w-full text-center mt-1">OR</h2>
+                <GoogleComponent message="Sign up with Google" />
+
+                <p className="text-center text-[9px] mt-1">
                     Already have an account?
                     <Link
                         to="/sign-in"
@@ -116,9 +120,6 @@ export const SignUp = () => {
                         Sign in
                     </Link>
                 </p>
-
-                <h2 className="font-bold text-[12px] w-full text-center mt-1 mb-1">OR</h2>
-                <GoogleComponent message="Sign up with Google" />
             </form>
         </section>
     )
