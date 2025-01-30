@@ -5,7 +5,7 @@ import { prisma } from "../../utils/other/prisma";
 
 export const SendVerificationService = async (
     email: string,
-    template: "EmailVerification" | "PasswordReset"
+    template: "email-verification" | "forgot-password"
 ) => {
     const user = await prisma.user.findUnique({ where: { email: email } });
 

@@ -53,7 +53,7 @@ router.put("/validate",
     strictLimiterMiddleware, AuthMiddleware, ValidateController
 )
 
-router.post("/send-verification/:template(EmailVerification|PasswordReset)",
+router.post("/send-verification/:template(email-verification|forgot-password)",
     strictLimiterMiddleware,
     ValidationDataMiddleware(fieldsSchema.pick({ email: true })),
     SendVerificationController

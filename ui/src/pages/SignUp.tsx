@@ -12,7 +12,7 @@ export const SignUp = () => {
     const [hidePassword, setHodePassword] = useState({ password: false, confirm: false })
 
     const url = "http://localhost:3000/register"
-    const redirect = "/congrats"
+    const redirect = "/verification/email-verification"
 
     const schema = fieldsSchema.pick({
         name: true,

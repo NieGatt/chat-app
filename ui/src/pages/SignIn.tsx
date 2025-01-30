@@ -46,7 +46,7 @@ export const SignIn = () => {
                                 ? "Email not signed up"
                                 : null
                         }
-                        <p className="text-end text-[9px] text-teal-500">Forgot your password?</p>
+                        <Link to="/verification/forgot-password" className="text-end text-[9px] text-teal-500">Forgot your password?</Link>
                     </p>
 
                 </div>

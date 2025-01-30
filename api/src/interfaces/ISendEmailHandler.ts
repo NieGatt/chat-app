@@ -2,5 +2,5 @@ export interface ISendEmailHandler {
     name: string;
     email: string;
     token: string;
-    templateName: "EmailVerification" | "PasswordReset"
+    templateName: "email-verification" | "forgot-password"
 }
