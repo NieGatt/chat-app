@@ -4,7 +4,7 @@ import { ILoginUser } from "../../interfaces/ILoginUser";
 
 export const LoginController = async (req: Request, res: Response) => {
     const { email, password }: ILoginUser = req.body
-
+    
     const accessToken = await LoginService({ email, password })
 
     res.cookie("Authorization",

@@ -1,16 +1,28 @@
-import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserData } from "../context/UserAuthentication";
+import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useUserData } from "../context/UserDataContext";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export const AuthorizationComponent = ({ element }: { element: React.ReactNode }) => {
-    let component: React.ReactNode | null
-    const user = useContext(UserData)
-    const navigate = useNavigate()
+    const { user, handleUser } = useUserData();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        element = user ? element : null
-        if (!element) navigate("/sign-in")
-    }, [])
+        (async () => {
+            await handleUser();
+            setLoading(false)
+        })();
+    }, []);
 
-    return component
-}
+    if (loading) {
+        return <section className="w-full h-[400px] animate-spin flex justify-center items-center">
+            <AiOutlineLoading3Quarters className="text-white" />
+        </section>
+    }
+
+    if (user === null) {
+        return <Navigate to="/sign-in" />;
+    }
+
+    return <>{element}</>;
+};

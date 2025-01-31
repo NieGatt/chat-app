@@ -45,7 +45,7 @@ router.get("/google/auth",
 
 router.get("/google/redirect",
     strictLimiterMiddleware,
-    passport.authenticate("google", { failureRedirect: "/login", session: false }),
+    passport.authenticate("google", { failureRedirect: "/sign-in", session: false }),
     GoogleLoginController
 )
 

@@ -1,5 +1,6 @@
+import { UserDataContext } from "./context/UserDataContext"
 import { Router } from "./routes"
 
 export const App = () => {
-  return <Router />
+  return <UserDataContext>{<Router />}</UserDataContext>
 }
