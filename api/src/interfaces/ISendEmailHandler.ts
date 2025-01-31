@@ -1,6 +1,8 @@
+import { TemplateType } from "../types/TemplateType";
+
 export interface ISendEmailHandler {
     name: string;
     email: string;
     token: string;
-    templateName: "email-verification" | "forgot-password"
+    templateName: TemplateType
 }

@@ -19,7 +19,7 @@ export const GlobalHandler = (
 
     res.status(statusCode).json({
         message,
-        code: statusCode,
+        statusCode,
         timestamp: new Date().toISOString()
     });
 }

@@ -12,7 +12,9 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true
   },
   "exclude": ["node_modules", "prisma"]
 }

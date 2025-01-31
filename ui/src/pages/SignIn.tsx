@@ -1,4 +1,4 @@
-import { ButtomComponent } from "../components/ButtomComponent"
+import { ButtonComponent } from "../components/ButtonComponent"
 import { GoogleComponent } from "../components/googleComponent"
 import { UseAuthenticate } from "../hooks/UseAuthenticate";
 import { fieldsSchema } from "../schemas/FieldsSchema";
@@ -51,7 +51,7 @@ export const SignIn = () => {
 
                 </div>
 
-                <ButtomComponent loading={loading} />
+                <ButtonComponent loading={loading} />
 
                 <h2 className="font-bold text-[12px] w-full text-center mt-1">OR</h2>
                 <GoogleComponent message="Sign in with Google" />

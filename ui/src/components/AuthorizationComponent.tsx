@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserData } from "../context/UserAuthentication";
 
-export const AuthComponent = ({ element }: { element: React.ReactNode }) => {
+export const AuthorizationComponent = ({ element }: { element: React.ReactNode }) => {
     let component: React.ReactNode | null
     const user = useContext(UserData)
     const navigate = useNavigate()

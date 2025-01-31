@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { SendVerificationService } from "../service/SendVeriicationService";
+import { TemplateType } from "../../types/TemplateType";
 
 export const SendVerificationController = async (req: Request, res: Response) => {
-    const { template } = req.params as { template: "EmailVerification" | "PasswordReset" }
-    const { email } = req.body
+    const template = req.params.template as TemplateType
+    const { email } = <{ email: string }>req.body
 
     await SendVerificationService(email, template);
 

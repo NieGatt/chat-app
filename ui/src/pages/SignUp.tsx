@@ -1,4 +1,4 @@
-import { ButtomComponent } from "../components/ButtomComponent"
+import { ButtonComponent } from "../components/ButtonComponent"
 import { GoogleComponent } from "../components/googleComponent"
 import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
@@ -107,7 +107,7 @@ export const SignUp = () => {
                     </p>
                 </div>
 
-                <ButtomComponent loading={loading} />
+                <ButtonComponent loading={loading} />
 
                 <h2 className="font-bold text-[12px] w-full text-center mt-1">OR</h2>
                 <GoogleComponent message="Sign up with Google" />

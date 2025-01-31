@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { SignUp } from './pages/SignUp';
 import { SignIn } from './pages/SignIn';
 import { EmailSending } from './pages/EmailSending';
+import { Validate } from './pages/Validate';
 
 export const Router = () => {
     return (
@@ -10,6 +11,7 @@ export const Router = () => {
                 <Route path='sign-up' Component={SignUp} />
                 <Route path='sign-in' Component={SignIn} />
                 <Route path='verification/:template' Component={EmailSending} />
+                <Route path='validate/:token' Component={Validate} />
             </Routes>
         </BrowserRouter>
     )

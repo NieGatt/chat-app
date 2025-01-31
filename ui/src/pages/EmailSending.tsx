@@ -1,7 +1,7 @@
 import { Navigate, useParams } from "react-router-dom"
 import { UseAuthenticate } from "../hooks/UseAuthenticate"
 import { fieldsSchema } from "../schemas/FieldsSchema"
-import { ButtomComponent } from "../components/ButtomComponent"
+import { ButtonComponent } from "../components/ButtonComponent"
 import { useEffect } from "react"
 
 type TemplateType = "email-verification" | "forgot-password"
@@ -53,7 +53,7 @@ export const EmailSending = () => {
                                 <p className="mt-3 leading-tight text-center mt-2 text-[12px] bg-transparent">
                                     If you can't see the email
                                 </p>
-                                <ButtomComponent
+                                <ButtonComponent
                                     loading={loading}
                                     text="Resend email verification"
                                 />
