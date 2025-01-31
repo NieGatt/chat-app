@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { ChangePassServie } from "../service/ChangePassService";
+import { ResetPassServie } from "../service/ResetPassService";
 
-export const ChangePassController = async (req: Request, res: Response) => {
+export const ResetPassController = async (req: Request, res: Response) => {
     const { password } = req.body as { password: string }
     const { id } = req.user as { id: string }
-    await ChangePassServie(id, password);
+    await ResetPassServie(id, password);
     res.status(200).json({
         result: "Ok",
         statusCode: 200

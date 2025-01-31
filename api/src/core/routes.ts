@@ -2,7 +2,7 @@ import "../utils/strategies/google";
 import { RegisterController } from "../modules/controller/RegisterController";
 import { LoginController } from "../modules/controller/LoginController";
 import { LogoutController } from "../modules/controller/LogoutController";
-import { ChangePassController } from "../modules/controller/ChangePassController";
+import { ResetPassController } from "../modules/controller/ResetPassController";
 import { GoogleLoginController } from "../modules/controller/GoogleLoginController";
 import { ValidateController } from "../modules/controller/ValidateController";
 import { SendVerificationController } from "../modules/controller/SendVerificationController";
@@ -59,11 +59,11 @@ router.post("/send-verification/:template(email-verification|forgot-password)",
     SendVerificationController
 )
 
-router.put("/change-password",
+router.put("/reset-password",
     strictLimiterMiddleware,
     AuthMiddleware,
     ValidationDataMiddleware(fieldsSchema.pick({ password: true })),
-    ChangePassController
+    ResetPassController
 )
 
 router.get("/user",

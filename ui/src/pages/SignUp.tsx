@@ -9,7 +9,7 @@ import { ISignUpUser } from "../interfaces/ISignUpUser";
 import { Link } from "react-router-dom";
 
 export const SignUp = () => {
-    const [hidePassword, setHodePassword] = useState({ password: false, confirm: false })
+    const [hidePassword, setHidePassword] = useState({ password: false, confirm: false })
 
     const url = "http://localhost:3000/register"
     const redirect = "/verification/email-verification"
@@ -74,7 +74,7 @@ export const SignUp = () => {
                         {...register("password")}
                     />
                     <div
-                        onClick={() => setHodePassword({ ...hidePassword, password: !hidePassword.password })}
+                        onClick={() => setHidePassword({ ...hidePassword, password: !hidePassword.password })}
                         className="absolute right-2 top-[6px]" >
                         {
                             hidePassword.password
@@ -94,7 +94,7 @@ export const SignUp = () => {
                         {...register("confirmPassword")}
                     />
                     <div
-                        onClick={() => setHodePassword({ ...hidePassword, confirm: !hidePassword.confirm })}
+                        onClick={() => setHidePassword({ ...hidePassword, confirm: !hidePassword.confirm })}
                         className="absolute right-2 top-[6px]" >
                         {
                             hidePassword.confirm
