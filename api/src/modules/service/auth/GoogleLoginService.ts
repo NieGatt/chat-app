@@ -1,6 +1,6 @@
-import { IGoogleLoginUser } from "../../interfaces/IGoogleLoginUser";
-import { prisma } from "../../utils/other/prisma";
-import { JwtTokenHandler } from "../../utils/other/JwtTokenHandler";
+import { IGoogleLoginUser } from "../../../interfaces/IGoogleLoginUser";
+import { prisma } from "../../../utils/other/prisma";
+import { JwtTokenHandler } from "../../../utils/other/JwtTokenHandler";
 
 export const GoogleLoginService = async (data: IGoogleLoginUser) => {
     const user = await prisma.user.findUnique({ where: { email: data.email } })
@@ -16,6 +16,12 @@ export const GoogleLoginService = async (data: IGoogleLoginUser) => {
         return accessToken
     }
 
-    await prisma.user.create({ data: { ...data, verified: true } });
+    await prisma.user.create({
+        data: {
+            ...data,
+            verified: true,
+            type: "GOOGLE_OAUTH20"
+        }
+    });
     return accessToken
 }

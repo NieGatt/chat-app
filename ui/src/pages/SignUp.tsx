@@ -1,9 +1,9 @@
 import { ButtonComponent } from "../components/ButtonComponent"
-import { GoogleComponent } from "../components/googleComponent"
+import { GoogleComponent } from "../components/GoogleComponent"
 import { IoEyeSharp } from "react-icons/io5";
 import { FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
-import { UseAuthenticate } from "../hooks/UseAuthenticate";
+import { useSendData } from "../hooks/useSendData";
 import { fieldsSchema } from "../schemas/FieldsSchema";
 import { ISignUpUser } from "../interfaces/ISignUpUser";
 import { Link } from "react-router-dom";
@@ -13,6 +13,7 @@ export const SignUp = () => {
 
     const url = "http://localhost:3000/register"
     const redirect = "/verification/email-verification"
+    const headers = { "Content-Type": "application/json" }
 
     const schema = fieldsSchema.pick({
         name: true,
@@ -30,7 +31,7 @@ export const SignUp = () => {
         statusCode,
         errors,
         register
-    } = UseAuthenticate<ISignUpUser>(schema, url, redirect)
+    } = useSendData<ISignUpUser>(schema, url, headers, "POST", redirect)
 
     return (
         <section className="w-screen h-screen flex justify-center items-center">

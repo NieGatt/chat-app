@@ -1,46 +1,32 @@
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod";
 import { fieldsSchema } from "../schemas/FieldsSchema";
 import { ButtonComponent } from "../components/ButtonComponent";
 import { FaEyeSlash } from "react-icons/fa";
 import { IoEyeSharp } from "react-icons/io5";
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useSendData } from "../hooks/useSendData";
+import { useParams } from "react-router-dom";
 
 type ResetPasswordType = { password: string, confirmPassword: string }
 
 export const ResetPassword = () => {
-    const [loading, setLoading] = useState<boolean>(false)
     const [hidePassword, setHidePassword] = useState({ password: false, confirm: false })
 
     const url = "http://localhost:3000/reset-password"
     const schema = fieldsSchema.pick({ password: true, confirmPassword: true })
+    const redirect = "/sign-in"
     const { token } = useParams() as { token: string }
-    const navigate = useNavigate()
+
+    const headers = {
+        "Content-Type": "application/json",
+        "Authorization": `Bearear ${token}`
+    }
 
     const {
         register,
-        formState: { errors },
-        handleSubmit
-    } = useForm<ResetPasswordType>({
-        mode: "onSubmit",
-        resolver: zodResolver(schema)
-    })
-
-    const submitHandler = handleSubmit(async (data) => {
-        setLoading(true)
-        const res = await fetch(url, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearear ${token}`
-            },
-            body: JSON.stringify(data)
-        })
-
-        if (res.ok) return navigate("/sign-in")
-        setLoading(false)
-    })
+        loading,
+        submitHandler,
+        errors,
+    } = useSendData<ResetPasswordType>(schema, url, headers, "PUT", redirect)
 
     return (
         <section className="w-screen h-screen flex justify-center items-center">

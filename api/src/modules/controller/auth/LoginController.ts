@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { LoginService } from "../service/LoginService";
-import { ILoginUser } from "../../interfaces/ILoginUser";
+import { LoginService } from "../../service/auth/LoginService";
+import { ILoginUser } from "../../../interfaces/ILoginUser";
 
 export const LoginController = async (req: Request, res: Response) => {
     const { email, password }: ILoginUser = req.body

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ResetPassServie } from "../service/ResetPassService";
+import { ResetPassServie } from "../../service/auth/ResetPassService";
 
 export const ResetPassController = async (req: Request, res: Response) => {
     const { password } = req.body as { password: string }

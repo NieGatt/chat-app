@@ -4,10 +4,12 @@ import { z } from "zod";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const UseAuthenticate = <T extends FieldValues>(
-    schema: z.ZodTypeAny,
-    url: string,
-    redirectTo?: string
+export const useSendData = <T extends FieldValues>(
+    setSchema: z.ZodTypeAny,
+    seturl: string,
+    setHeaders: {},
+    setMethod: "POST" | "PUT",
+    setRedirect?: string
 ) => {
     const [statusCode, setStatusCode] = useState<number>(1)
     const [loading, setLoading] = useState<boolean>(false)
@@ -21,14 +23,14 @@ export const UseAuthenticate = <T extends FieldValues>(
         setValue
     } = useForm<T>({
         mode: "onSubmit",
-        resolver: zodResolver(schema)
+        resolver: zodResolver(setSchema)
     })
 
     const submitHandler = handleSubmit(async (data) => {
         setLoading(true)
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+        const response = await fetch(seturl, {
+            method: setMethod,
+            headers: setHeaders,
             body: JSON.stringify(data),
             credentials: "include"
         })
@@ -36,7 +38,7 @@ export const UseAuthenticate = <T extends FieldValues>(
         if (response.ok) {
             setLoading(false)
             data.email && sessionStorage.setItem("email", data.email)
-            redirectTo && navigate(redirectTo)
+            setRedirect && navigate(setRedirect)
         }
 
         setStatusCode(response.status)

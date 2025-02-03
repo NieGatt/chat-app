@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { v4 as uuid } from "uuid";
-import { IRegisterUser } from "../../interfaces/IRegisterUser";
-import { RegisterService } from "../service/RegisterService";
+import { IRegisterUser } from "../../../interfaces/IRegisterUser";
+import { RegisterService } from "../../service/auth/RegisterService";
 
 export const RegisterController = async (req: Request, res: Response) => {
     const { name, email, password }: IRegisterUser = req.body

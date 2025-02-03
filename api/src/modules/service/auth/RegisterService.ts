@@ -1,9 +1,9 @@
-import { IRegisterUser } from "../../interfaces/IRegisterUser";
-import { Conflict } from "../../utils/exceptions/ExceptionHandler";
-import { prisma } from "../../utils/other/prisma";
-import { JwtTokenHandler } from "../../utils/other/JwtTokenHandler";
-import { HashingHandler } from "../../utils/other/HashingHandler";
-import { EmailSendingHandler } from "../../utils/nodemailer/EmailSendingHandler";
+import { IRegisterUser } from "../../../interfaces/IRegisterUser";
+import { Conflict } from "../../../utils/exceptions/ExceptionHandler";
+import { prisma } from "../../../utils/other/prisma";
+import { JwtTokenHandler } from "../../../utils/other/JwtTokenHandler";
+import { HashingHandler } from "../../../utils/other/HashingHandler";
+import { EmailSendingHandler } from "../../../utils/nodemailer/EmailSendingHandler";
 
 export const RegisterService = async (data: IRegisterUser) => {
     const user = await prisma.user.findUnique({where: { email: data.email }});

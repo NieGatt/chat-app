@@ -1,4 +1,4 @@
-import { prisma } from "../../utils/other/prisma"
+import { prisma } from "../../../utils/other/prisma"
 
 export const ValidateServie = async (id: string) => {
     const user = await prisma.user.findUnique({ where: { id } })

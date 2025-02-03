@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { SendVerificationService } from "../service/SendVeriicationService";
-import { TemplateType } from "../../types/TemplateType";
+import { SendVerificationService } from "../../service/auth/SendVeriicationService";
+import { TemplateType } from "../../../types/TemplateType";
 
 export const SendVerificationController = async (req: Request, res: Response) => {
     const template = req.params.template as TemplateType

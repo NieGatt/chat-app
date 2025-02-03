@@ -1,5 +1,5 @@
-import { HashingHandler } from "../../utils/other/HashingHandler"
-import { prisma } from "../../utils/other/prisma"
+import { HashingHandler } from "../../../utils/other/HashingHandler"
+import { prisma } from "../../../utils/other/prisma"
 
 export const ResetPassServie = async (id: string, password: string) => {
     const hashingHandler = new HashingHandler()

@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserType {
+  STANDARD_AUTH
+  GOOGLE_OAUTH20
+}
+
 model User {
   id           String   @id @unique @db.VarChar(36)
   pictureUrl   String?
@@ -15,6 +20,7 @@ model User {
   email        String   @unique @db.VarChar(50)
   password     String?  @db.VarChar(70)
   verified     Boolean  @default(false)
+  type         UserType @default(STANDARD_AUTH)
   refreshToken String?  @unique
   createdAt    DateTime @default(now())
 }

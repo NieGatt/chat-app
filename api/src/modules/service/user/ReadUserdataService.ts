@@ -1,4 +1,4 @@
-import { prisma } from "../../utils/other/prisma";
+import { prisma } from "../../../utils/other/prisma";
 
 export const ReadUserDataService = async (id: string) => {
     return await prisma.user.findUnique({
@@ -7,7 +7,8 @@ export const ReadUserDataService = async (id: string) => {
             id: true,
             name: true,
             email: true,
-            pictureUrl: true
+            pictureUrl: true,
+            type: true
         }
     })
 }

@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { ValidateServie } from "../service/validateService";
+import { ValidateServie } from "../../service/auth/ValidateService";
 
 export const ValidateController = async (req: any, res: Response) => {
     const id = req.user.id

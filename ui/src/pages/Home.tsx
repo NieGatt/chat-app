@@ -1,3 +1,4 @@
+import { SettingsComponent } from "../components/SettingsComponent"
 import { ToolbarComponent } from "../components/ToolbarComponent"
 import { useState } from "react"
 
@@ -14,6 +15,11 @@ export const Home = () => {
             {
                 index === 2 ? (
                     <div></div>
+                ) : index === 3 ? (
+                    <div></div>
+
+                ) : index === 4 ? (
+                    <SettingsComponent />
                 ) : null
             }
         </section>

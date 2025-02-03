@@ -1,6 +1,6 @@
 import { ButtonComponent } from "../components/ButtonComponent"
-import { GoogleComponent } from "../components/googleComponent"
-import { UseAuthenticate } from "../hooks/UseAuthenticate";
+import { GoogleComponent } from "../components/GoogleComponent"
+import { useSendData } from "../hooks/useSendData";
 import { fieldsSchema } from "../schemas/FieldsSchema";
 import { Link } from "react-router-dom";
 import { ISignInUser } from "../interfaces/ISignInUser";
@@ -9,6 +9,7 @@ export const SignIn = () => {
     const url = "http://localhost:3000/login"
     const schema = fieldsSchema.pick({ email: true, password: true })
     const redirect = "/"
+    const headers = { "Content-Type": "application/json" }
 
     const {
         submitHandler,
@@ -16,7 +17,7 @@ export const SignIn = () => {
         statusCode,
         errors,
         register
-    } = UseAuthenticate<ISignInUser>(schema, url, redirect)
+    } = useSendData<ISignInUser>(schema, url, headers, "POST", redirect)
 
     return (
         <section className="w-screen h-screen flex justify-center items-center">

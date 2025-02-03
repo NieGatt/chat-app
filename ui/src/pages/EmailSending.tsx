@@ -1,5 +1,5 @@
 import { Navigate, useParams } from "react-router-dom"
-import { UseAuthenticate } from "../hooks/UseAuthenticate"
+import { useSendData } from "../hooks/useSendData"
 import { fieldsSchema } from "../schemas/FieldsSchema"
 import { ButtonComponent } from "../components/ButtonComponent"
 import { useEffect } from "react"
@@ -18,6 +18,7 @@ export const EmailSending = () => {
     const email = sessionStorage.getItem("email")
     const url = `http://localhost:3000/send-verification/${template}`
     const schema = fieldsSchema.pick({ email: true })
+    const heaaders = { "Content-Type": "application/json" }
 
     const {
         register,
@@ -26,7 +27,7 @@ export const EmailSending = () => {
         loading,
         submitHandler,
         setValue
-    } = UseAuthenticate<FieldValueType>(schema, url)
+    } = useSendData<FieldValueType>(schema, url, heaaders, "POST")
 
     useEffect(() => {
         if (template === "email-verification") {

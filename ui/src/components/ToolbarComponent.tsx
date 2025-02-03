@@ -3,6 +3,7 @@ import { IoMdHome } from "react-icons/io";
 import { IoMdLogOut } from "react-icons/io";
 import { IoChatbubbleEllipses } from "react-icons/io5";
 import { IoSettings } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 export const ToolbarComponent = ({
     handleClick,
@@ -11,12 +12,15 @@ export const ToolbarComponent = ({
     handleClick: (value: number) => void,
     index: number
 }) => {
+    const navigate = useNavigate()
+
     const handleLogout = async () => {
-        await fetch("http://localhost:3000/logout", {
+        const res = await fetch("http://localhost:3000/logout", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include"
         })
+        if (res.ok) return navigate("/sign-in")
     }
 
     return (

@@ -3,4 +3,5 @@ export interface IUserData {
     name: string;
     email: string;
     pictureUrl?: string;
+    type: "STANDARD_AUTH" | "GOOGLE_OAUTH20"
 }

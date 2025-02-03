@@ -1,20 +1,21 @@
 import "../utils/strategies/google";
-import { RegisterController } from "../modules/controller/RegisterController";
-import { LoginController } from "../modules/controller/LoginController";
-import { LogoutController } from "../modules/controller/LogoutController";
-import { ResetPassController } from "../modules/controller/ResetPassController";
-import { GoogleLoginController } from "../modules/controller/GoogleLoginController";
-import { ValidateController } from "../modules/controller/ValidateController";
-import { SendVerificationController } from "../modules/controller/SendVerificationController";
+import { RegisterController } from "../modules/controller/auth/RegisterController";
+import { LoginController } from "../modules/controller/auth/LoginController";
+import { LogoutController } from "../modules/controller/auth/LogoutController";
+import { ResetPassController } from "../modules/controller/auth/ResetPassController";
+import { GoogleLoginController } from "../modules/controller/auth/GoogleLoginController";
+import { ValidateController } from "../modules/controller/auth/ValidateController";
+import { SendVerificationController } from "../modules/controller/auth/SendVerificationController";
 import { CookieMiddleware } from "../middlewares/CookieMiddleware";
 import { AuthMiddleware } from "../middlewares/AuthMiddleware";
 import { strictLimiterMiddleware, standardLimiterMiddleware } from "../middlewares/LimiterMiddleware";
 import { ValidationDataMiddleware } from "../middlewares/ValidationDataMiddleware";
 import { fieldsSchema } from "../schemas/FieldsSchema";
+import { ReadUserDataController } from "../modules/controller/user/ReadUserDataControlelr";
 
 import passport from "passport";
 import express from "express";
-import { ReadUserDataController } from "../modules/controller/ReadUserDataControlelr";
+import { UserResetPassController } from "../modules/controller/user/UserResetPassController";
 
 const router = express.Router();
 
@@ -69,5 +70,10 @@ router.put("/reset-password",
 router.get("/user",
     standardLimiterMiddleware, CookieMiddleware, ReadUserDataController
 )
+
+router.put("/user/reset-password",
+    strictLimiterMiddleware, CookieMiddleware, UserResetPassController
+)
+
 
 export { router };

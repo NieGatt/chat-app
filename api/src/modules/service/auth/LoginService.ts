@@ -1,8 +1,8 @@
-import { ILoginUser } from "../../interfaces/ILoginUser";
-import { NotFound, Unauthorized } from "../../utils/exceptions/ExceptionHandler";
-import { HashingHandler } from "../../utils/other/HashingHandler";
-import { JwtTokenHandler } from "../../utils/other/JwtTokenHandler";
-import { prisma } from "../../utils/other/prisma";
+import { ILoginUser } from "../../../interfaces/ILoginUser";
+import { NotFound, Unauthorized } from "../../../utils/exceptions/ExceptionHandler";
+import { HashingHandler } from "../../../utils/other/HashingHandler";
+import { JwtTokenHandler } from "../../../utils/other/JwtTokenHandler";
+import { prisma } from "../../../utils/other/prisma";
 
 export const LoginService = async (data: ILoginUser) => {
     const user = await prisma.user.findUnique({ where: { email: data.email } });
