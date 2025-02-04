@@ -1,3 +1,5 @@
 node_modules
 .env
 clean.ts
+src/utils/fileUploads
+src/modules

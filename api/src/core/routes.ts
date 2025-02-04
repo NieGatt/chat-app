@@ -12,12 +12,18 @@ import { strictLimiterMiddleware, standardLimiterMiddleware } from "../middlewar
 import { ValidationDataMiddleware } from "../middlewares/ValidationDataMiddleware";
 import { fieldsSchema } from "../schemas/FieldsSchema";
 import { ReadUserDataController } from "../modules/controller/user/ReadUserDataControlelr";
+import { UserResetPassController } from "../modules/controller/user/UserResetPassController";
+import { UploadMiddleware } from "../middlewares/UploadMiddleware";
 
 import passport from "passport";
 import express from "express";
-import { UserResetPassController } from "../modules/controller/user/UserResetPassController";
+import { UpdateUserController } from "../modules/controller/user/UpdateUserController";
 
 const router = express.Router();
+
+const ProfileUpload = UploadMiddleware(
+    10 * 1024 * 1024, ["image/png", "image/jpeg", "image/jpg"]
+)
 
 router.post("/register",
     strictLimiterMiddleware,
@@ -73,6 +79,12 @@ router.get("/user",
 
 router.put("/user/reset-password",
     strictLimiterMiddleware, CookieMiddleware, UserResetPassController
+)
+
+router.put("/user",
+    strictLimiterMiddleware, CookieMiddleware, ProfileUpload,
+    ValidationDataMiddleware(fieldsSchema.pick({ name: true })),
+    UpdateUserController
 )
 
 
