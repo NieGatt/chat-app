@@ -40,4 +40,8 @@ export class JwtTokenHandler {
             throw new Unauthorized("Jwt token is invalid");
         }
     }
+
+    decodeToken(token: string) {
+        return jwt.decode(token)
+    }
 }

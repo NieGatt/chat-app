@@ -18,6 +18,7 @@ import { UploadMiddleware } from "../middlewares/UploadMiddleware";
 import passport from "passport";
 import express from "express";
 import { UpdateUserController } from "../modules/controller/user/UpdateUserController";
+import { RefreshTokenController } from "../modules/controller/auth/RefreshTokenController";
 
 const router = express.Router();
 
@@ -71,6 +72,10 @@ router.put("/reset-password",
     AuthMiddleware,
     ValidationDataMiddleware(fieldsSchema.pick({ password: true })),
     ResetPassController
+)
+
+router.get("/refresh-token",
+    strictLimiterMiddleware, RefreshTokenController
 )
 
 router.get("/user",
