@@ -1,32 +1,57 @@
 import { createContext, useContext, useState } from "react";
 import { IUserData } from "../interfaces/IUserData";
+import { IUserContext } from "../interfaces/IUserContext";
 
-const UserData = createContext<{
-    user: IUserData | null;
-    handleUser: () => Promise<void>;
-}>({
+const UserData = createContext<IUserContext>({
     user: null,
-    handleUser: async () => { }
+    handleUser: async () => { },
+    loading: false
 });
 
 const UserDataContext = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<null | IUserData>(null)
+    const [loading, setLoading] = useState<boolean>(true)
 
-    const handleUser = async () => {
+    const fetchUserData = async (): Promise<IUserData | null> => {
         const response = await fetch("http://localhost:3000/user", {
             method: "GET",
-            headers: { "Content-Type": "application/json" },
             credentials: "include"
         })
 
-        if (response.ok) {
-            const data = await response.json()
-            setUser(data)
+        if (!response.ok) return null
+
+        const data = await response.json() as IUserData
+        setUser(data)
+        return data
+    }
+
+    const refreshToken = async (): Promise<boolean> => {
+        const res = await fetch("http://localhost:3000/refresh-token", {
+            method: "GET",
+            credentials: "include"
+        })
+        return res.ok ? true : false
+    }
+
+    const handleUser = async () => {
+        try {
+            const data = await fetchUserData()
+
+            if (!data) {
+                const refresh = await refreshToken()
+                if (refresh) {
+                    await fetchUserData()
+                }
+            }
+            setLoading(false)
+        } catch (error) {
+            setLoading(false)
+            console.log("Fetch user failed", error)
         }
     }
 
     return (
-        <UserData.Provider value={{ user, handleUser }}>
+        <UserData.Provider value={{ user, handleUser, loading }}>
             {children}
         </UserData.Provider>
     )
