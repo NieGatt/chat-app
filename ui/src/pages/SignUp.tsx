@@ -42,8 +42,8 @@ export const SignUp = () => {
 
                 <div className="mt-3">
                     <input
-                        className={`px-1 text-[12px] outline-none h-6 border-b ${errors.name ? "border-red-400" : "border-teal-600"} bg-zinc-100 bg-opacity-10 w-full
-                        placeholder="Name`}
+                        className={`px-1 text-[12px] outline-none h-6 border-b ${errors.name ? "border-red-400" : "border-teal-600"} bg-zinc-100 bg-opacity-10 w-full`}
+                        placeholder="Name"
                         type="text"
                         {...register("name")}
                     />

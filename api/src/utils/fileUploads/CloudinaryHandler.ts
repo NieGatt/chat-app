@@ -1,7 +1,7 @@
 import { cloudinary } from "./CloudinaryConfig";
 
 export class CloudinaryHandler {
-    async uploadProflePicture(id: string, filePath: string) {
+    async uploadProflePicture(filePath: string) {
         const result = await cloudinary.uploader.upload(
             filePath,
             {

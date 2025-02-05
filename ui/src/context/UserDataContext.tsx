@@ -4,7 +4,7 @@ import { IUserContext } from "../interfaces/IUserContext";
 
 const UserData = createContext<IUserContext>({
     user: null,
-    handleUser: async () => { },
+    handleUserData: async () => { },
     loading: false
 });
 
@@ -33,7 +33,7 @@ const UserDataContext = ({ children }: { children: React.ReactNode }) => {
         return res.ok ? true : false
     }
 
-    const handleUser = async () => {
+    const handleUserData = async () => {
         try {
             const data = await fetchUserData()
 
@@ -51,7 +51,7 @@ const UserDataContext = ({ children }: { children: React.ReactNode }) => {
     }
 
     return (
-        <UserData.Provider value={{ user, handleUser, loading }}>
+        <UserData.Provider value={{ user, handleUserData, loading }}>
             {children}
         </UserData.Provider>
     )

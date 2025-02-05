@@ -4,14 +4,13 @@ import { useUserData } from "../context/UserDataContext";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export const AuthorizationComponent = ({ element }: { element: React.ReactNode }) => {
-    const { user, handleUser, loading } = useUserData();
+    const { user, handleUserData, loading } = useUserData();
 
     useEffect(() => {
         (async () => {
-            await handleUser();
+            await handleUserData()
         })();
     }, []);
-
     return (
         <>
             {
