@@ -4,7 +4,9 @@ import { RefreshTokenService } from "../../service/auth/RefreshTokenService";
 
 export const RefreshTokenController = async (req: Request, res: Response) => {
     const token = req.cookies["Authorization"]
-    if (!token) throw new Unauthorized("Authorization cookie is missing");
+
+    if (!token && typeof token === "string")
+        throw new Unauthorized("Authorization cookie is missing");
 
     const accessToken = await RefreshTokenService(token)
 

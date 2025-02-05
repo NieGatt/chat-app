@@ -14,8 +14,7 @@ export const UserResetPassService = async (data: User) => {
     if (user?.type === "GOOGLE_OAUTH20") {
         if (user.password) {
             const isTheSame = hashingHandler.compareData(data.password, user.password)
-            if (isTheSame)
-                throw new Conflict("The new password cannot be equal to the current one")
+            if (isTheSame) throw new Conflict("Password cannot be equal to the current one")
         }
 
         const hashedPass = hashingHandler.hashData(data.password)
@@ -27,12 +26,12 @@ export const UserResetPassService = async (data: User) => {
     }
 
     else if (user?.type === "STANDARD_AUTH" && data.currentPassword) {
-        const isTheSame = hashingHandler.compareData(data.password, user.password!)
-        if (isTheSame)
-            throw new Conflict("The new password cannot be equal to the current one")
 
         const isEqual = hashingHandler.compareData(data.currentPassword, user.password!)
-        if (!isEqual) throw new BadRequest("Incorrect password")
+        if (!isEqual) throw new BadRequest("Incorrect current password")
+
+        const isTheSame = hashingHandler.compareData(data.password, user.password!)
+        if (isTheSame) throw new Conflict("Password cannot be equal to the current one")
 
         const hashedPass = hashingHandler.hashData(data.password)
         await prisma.user.update({

@@ -7,9 +7,9 @@ import { prisma } from "../../../utils/other/prisma";
 export const LoginService = async (data: ILoginUser) => {
     const user = await prisma.user.findUnique({ where: { email: data.email } });
 
-    if (!user) throw new NotFound("User Not Found.");
+    if (!user) throw new NotFound("User not found");
 
-    else if (!user.verified) throw new Unauthorized("Unverified email address.")
+    else if (!user.verified) throw new Unauthorized("Unverified email address")
 
     const hashingHandler = new HashingHandler();
     const isEqual = hashingHandler.compareData(data.password, user.password!)

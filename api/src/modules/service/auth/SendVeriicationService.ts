@@ -10,7 +10,7 @@ export const SendVerificationService = async (
 ) => {
     const user = await prisma.user.findUnique({ where: { email: email } });
 
-    if (!user) throw new NotFound("User not found.");
+    if (!user) throw new NotFound("User not found");
 
     const jwtTokenHandler = new JwtTokenHandler();
     const verificationToken = jwtTokenHandler.verificationToken(user.id);

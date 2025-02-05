@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { Request, Response, NextFunction } from "express";
 import { Unauthorized } from "../utils/exceptions/ExceptionHandler";
 import { JwtTokenHandler } from "../utils/other/JwtTokenHandler";
@@ -8,7 +7,6 @@ export const AuthMiddleware = async (
     res: Response,
     next: NextFunction
 ) => {
-    const secret = process.env.VERIFICATION_SECRET!
     const jwtTokenHandler = new JwtTokenHandler();
 
     const headers = req.headers.authorization
@@ -22,7 +20,7 @@ export const AuthMiddleware = async (
         return next(new Unauthorized("Verification token is missing"))
 
     try {
-        const { sub } = jwtTokenHandler.verifyToken(verificationToken, secret) as { sub: string }
+        const { sub } = jwtTokenHandler.verifyVerificationToken(verificationToken) as { sub: string }
 
         req.user = { id: sub }
         next();

@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { Request, Response, NextFunction } from "express";
 import { Unauthorized } from "../utils/exceptions/ExceptionHandler";
 import { prisma } from "../utils/other/prisma";
@@ -9,7 +8,6 @@ export const CookieMiddleware = async (
     res: Response,
     next: NextFunction
 ) => {
-    const secret = process.env.ACCESSTOKEN_SECRET!
     const jwtTokenHandler = new JwtTokenHandler();
 
     const accessToken = req.cookies["Authorization"];
@@ -18,7 +16,7 @@ export const CookieMiddleware = async (
         return next(new Unauthorized("Authorization cookie is missing"));
 
     try {
-        const decoded = jwtTokenHandler.verifyToken(accessToken, secret) as { sub: string }
+        const decoded = jwtTokenHandler.verifyAccessToken(accessToken) as { sub: string }
         const user = await prisma.user.findUnique({ where: { id: decoded.sub } })
 
         if (!user?.verified)

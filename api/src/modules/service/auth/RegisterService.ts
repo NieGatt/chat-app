@@ -8,7 +8,7 @@ import { EmailSendingHandler } from "../../../utils/nodemailer/EmailSendingHandl
 export const RegisterService = async (data: IRegisterUser) => {
     const user = await prisma.user.findUnique({where: { email: data.email }});
     
-    if (user) throw new Conflict("Email already in use.");
+    if (user) throw new Conflict("Email already in use");
 
     const jwtTokenHandler = new JwtTokenHandler();
     const verificationToken = jwtTokenHandler.verificationToken(data.id);
