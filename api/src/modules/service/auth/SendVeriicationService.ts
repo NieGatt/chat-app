@@ -1,8 +1,8 @@
 import { TemplateType } from "../../../types/TemplateType";
 import { NotFound } from "../../../utils/exceptions/ExceptionHandler";
-import { EmailSendingHandler } from "../../../utils/nodemailer/EmailSendingHandler";
-import { JwtTokenHandler } from "../../../utils/other/JwtTokenHandler";
-import { prisma } from "../../../utils/other/prisma";
+import { deliverEmail } from "../../../utils/nodemailer/EmailSendingHandler";
+import { JwtTokenHandler } from "../../../utils/JwtTokenHandler";
+import { prisma } from "../../../utils/prisma";
 
 export const SendVerificationService = async (
     email: string,
@@ -12,12 +12,9 @@ export const SendVerificationService = async (
 
     if (!user) throw new NotFound("User not found");
 
-    const jwtTokenHandler = new JwtTokenHandler();
-    const verificationToken = jwtTokenHandler.verificationToken(user.id);
-
-    const emailSendingHandler = new EmailSendingHandler();
+    const verificationToken = JwtTokenHandler.verificationToken(user.id);
     
-    await emailSendingHandler.deliverEmail({
+    await deliverEmail({
         name: user.name,
         email: user.email,
         token: verificationToken,

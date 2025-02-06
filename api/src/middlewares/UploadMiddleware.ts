@@ -35,5 +35,5 @@ export const UploadMiddleware = (
         },
     })
 
-    return upload.single("file")
+    return upload
 }

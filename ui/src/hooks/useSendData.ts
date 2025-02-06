@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export const useSendData = <T extends FieldValues>(
     setSchema: z.ZodTypeAny,
     seturl: string,
-    setHeaders: {},
+    setHeaders: { [key: string]: string },
     setMethod: "POST" | "PUT",
     setRedirect?: string
 ) => {

@@ -1,6 +1,14 @@
 import { z } from "zod";
 
 const fieldsSchema = z.object({
+    fileImage:
+        z.instanceof(File)
+        .refine((file) => file.size <= 10 * 1024 * 1024, "File cannot exceed 10MB")
+        .refine((file) =>
+                ["image/jpeg", "image/jpg", "image/png"].includes(file.type),
+                "File extension does not match .jpeg, .png, .jpg")
+            .optional(),
+
     name: z.string({ message: "Name Is Requred" }).regex(/^[a-zA-ZÀ-ú\s]{3,50}$/,
         { message: "Name is 3-50 chars and space" }).trim(),
 

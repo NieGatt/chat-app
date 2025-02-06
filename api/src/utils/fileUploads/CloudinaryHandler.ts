@@ -1,7 +1,10 @@
 import { cloudinary } from "./CloudinaryConfig";
 
 export class CloudinaryHandler {
-    async uploadProflePicture(filePath: string) {
+    async uploadProflePicture(
+        filePath: string,
+        folderPath: string
+    ) {
         const result = await cloudinary.uploader.upload(
             filePath,
             {
@@ -9,7 +12,7 @@ export class CloudinaryHandler {
                 overwrite: true,
                 unique_filename: false,
                 chunk_size: 10000,
-                folder: "chat-app/profile-pictures"
+                folder: `chat-app/${folderPath}`
             }
         )
 

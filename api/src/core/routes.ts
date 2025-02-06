@@ -87,7 +87,7 @@ router.put("/user/reset-password",
 )
 
 router.put("/user",
-    strictLimiterMiddleware, CookieMiddleware, ProfileUpload,
+    strictLimiterMiddleware, CookieMiddleware, ProfileUpload.single("fileImage"),
     ValidationDataMiddleware(fieldsSchema.pick({ name: true })),
     UpdateUserController
 )

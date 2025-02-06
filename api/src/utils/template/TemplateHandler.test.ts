@@ -1,15 +1,13 @@
-import { GenerateTemplate } from "./GenerateTemplate";
+import { templateHandler } from "./TemplateHandler";
 
 it("should generate templates correctly", () => {
-    const generateTemplate = new GenerateTemplate()
-
-    const emailTemplate = generateTemplate.compile({
+    const emailTemplate = templateHandler({
         templateName: "email-verification",
         name: "Jhon Doe",
         token: "Some token"
     })
 
-    const passwordTemplate = generateTemplate.compile({
+    const passwordTemplate = templateHandler({
         templateName: "forgot-password",
         name: "Jhon Doe",
         token: "Some"

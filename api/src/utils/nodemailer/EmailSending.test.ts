@@ -1,5 +1,5 @@
 import { transporter } from "./NodeMailerConfig"
-import { EmailSendingHandler } from "./EmailSendingHandler"
+import { deliverEmail } from "./EmailSendingHandler"
 
 jest.mock("./NodeMailerConfig", () => {
     return { transporter: { sendMail: jest.fn(() => "success") } }
@@ -9,8 +9,7 @@ const mockedTransporter = <jest.Mocked<typeof transporter>>transporter
 
 describe("testing email transporter", () => {
     it("should be called with correct parameters", async () => {
-        const emailSendingHandler = new EmailSendingHandler()
-        emailSendingHandler.deliverEmail({
+        deliverEmail({
             templateName: "email-verification",
             name: "Joana Doe",
             email: "example@account.com",
