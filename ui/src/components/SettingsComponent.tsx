@@ -88,7 +88,7 @@ export const SettingsComponent = () => {
 
                                 <form
                                     onSubmit={submitHandler2}
-                                    className="flex mt-6 gap-x-10 h-full w-full">
+                                    className="flex mt-2 gap-x-10 h-full w-full">
 
                                     <div className="w-40 h-40">
                                         <label
@@ -97,7 +97,7 @@ export const SettingsComponent = () => {
                                         <input type="text"
                                             defaultValue={user?.name}
                                             id="name"
-                                            className={`px-1 text-[12px] outline-none h-6 border-b ${errors2.name ? "border-red-400" : "border-teal-600"} bg-zinc-100 bg-opacity-10 w-full`}
+                                            className={`px-1 text-[12px] outline-none h-6 border-b ${errors2.name ? "border-red-400" : "border-teal-600"} bg-zinc-100 bg-opacity-10 w-64`}
                                             {...register2("name")}
                                         />
                                         <p className="text-[9px] text-red-400">{errors2.name?.message || ""}</p>
@@ -133,7 +133,7 @@ export const SettingsComponent = () => {
                                             }
                                         </div>
                                         <div className="w-full mt-2 relative flex items-center bg-transparent hover:opacity-90 flex-col">
-                                            <div className="flex gap-x-2 items-center bg-white px-2 text-black rounded">
+                                            <div className="flex gap-x-2 items-center bg-teal-600 px-2  rounded">
                                                 <p className="bg-transparent text-[12px]">Edit</p>
                                                 <FaEdit className="text-xs bg-transparent" />
                                             </div>

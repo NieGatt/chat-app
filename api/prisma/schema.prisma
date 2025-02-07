@@ -15,7 +15,6 @@ enum UserType {
 model User {
   id           String   @id @unique @db.VarChar(36)
   pictureUrl   String?
-  pictureId    String?
   name         String   @db.VarChar(50)
   email        String   @unique @db.VarChar(50)
   password     String?  @db.VarChar(70)
@@ -23,4 +22,32 @@ model User {
   type         UserType @default(STANDARD_AUTH)
   refreshToken String?  @unique
   createdAt    DateTime @default(now())
+
+  messages Message[]
+  chats    Chat[]
+}
+
+enum StatusMSG {
+  SEEN
+  NOT_SEEN
+}
+
+model Message {
+  id        Int       @id @default(autoincrement())
+  text      String?   @db.Text
+  fileUrl   String?   @db.Text
+  status    StatusMSG @default(NOT_SEEN)
+  createdAt DateTime  @default(now())
+
+  user_id String @db.VarChar(36)
+  user    User   @relation(fields: [user_id], references: [id], onUpdate: Cascade)
+
+  chat_id String @db.VarChar(36)
+  chat    Chat   @relation(fields: [chat_id], references: [id], onDelete: Cascade)
+}
+
+model Chat {
+  id       String    @id @unique @default(uuid()) @db.VarChar(36)
+  users    User[]
+  messages Message[]
 }

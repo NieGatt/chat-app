@@ -19,6 +19,8 @@ import passport from "passport";
 import express from "express";
 import { UpdateUserController } from "../modules/controller/user/UpdateUserController";
 import { RefreshTokenController } from "../modules/controller/auth/RefreshTokenController";
+import { FindUserController } from "../modules/controller/user/FindUserController";
+import { FindUserChatsController } from "../modules/controller/chat/FindUserChatsController";
 
 const router = express.Router();
 
@@ -92,5 +94,12 @@ router.put("/user",
     UpdateUserController
 )
 
+router.get("/user/:name([a-zA-ZÀ-ú\\s]{3,50})",
+    standardLimiterMiddleware, CookieMiddleware, FindUserController
+)
+
+router.get("/chat",
+    standardLimiterMiddleware, CookieMiddleware, FindUserChatsController
+)
 
 export { router };

@@ -7,9 +7,7 @@ export const UpdateUserService = async (
     id: string,
     name: string,
     filePath?: string
-) => {
-    console.log(name, filePath)
-    
+) => {    
     if (filePath) {
         const directory = path.dirname(filePath)
         const newPath = path.join(directory, `${id}${path.extname(filePath)}`)
@@ -19,13 +17,12 @@ export const UpdateUserService = async (
         const foldrPath = "profile-pictures"
 
         const cloudinaryHandler = new CloudinaryHandler()
-        const result = await cloudinaryHandler.uploadProflePicture(newPath, foldrPath)
+        const url = await cloudinaryHandler.uploadProflePicture(newPath, foldrPath)
 
         await prisma.user.update({
             where: { id },
             data: {
-                pictureId: result.picture_id,
-                pictureUrl: result.url
+                pictureUrl: url
             }
         })
 

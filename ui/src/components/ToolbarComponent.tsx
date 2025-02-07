@@ -27,14 +27,14 @@ export const ToolbarComponent = ({
 
     return (
         <>
-            <div className="h-full w-12 flex flex-col items-center justify-between gap-y-8 py-5">
+            <div className="h-full w-12 bg-black bg-opacity-20 flex flex-col items-center justify-between gap-y-8 py-5">
                 <div
                     className="flex justify-center items-center text-white rounded-full w-8 h-8">
                     {
                         !user?.pictureUrl ? (
                             <RxAvatar className="w-full bg-transparent rounded-full h-full" />
                         ) : (
-                            <img src={user.pictureUrl} alt="picture" className="w-full h-full rounded-full"/>
+                            <img src={user.pictureUrl} alt="picture" className="w-full h-full rounded-full" />
                         )
                     }
                 </div>
@@ -42,23 +42,23 @@ export const ToolbarComponent = ({
                 <div className="bg-transparent flex flex-col gap-y-3">
                     <IoMdHome
                         onClick={() => handleClick(2)}
-                        className={`h-5 w-5 ${index === 2 ? "text-teal-500" : "text-teal-800"}`} />
+                        className={`h-5 w-5 ${index === 2 ? "text-teal-500" : "text-teal-800"} bg-transparent`} />
 
                     <IoChatbubbleEllipses
                         onClick={() => handleClick(3)}
-                        className={`h-4 w-4 ${index === 3 ? "text-teal-500" : "text-teal-800"}`} />
+                        className={`h-4 w-4 ${index === 3 ? "text-teal-500" : "text-teal-800"} bg-transparent`} />
 
                 </div>
 
-                <div className="flex flex-col">
+                <div className="flex flex-col bg-transparent">
                     <button>
                         <IoSettings
                             onClick={() => handleClick(4)}
-                            className={`h-4 w-4 ${index === 4 ? "text-teal-300" : "text-teal-800"}`} />
+                            className={`h-4 w-4 ${index === 4 ? "text-teal-300" : "text-teal-800"} bg-transparent`} />
 
                         <IoMdLogOut
                             onClick={async () => await handleLogout()}
-                            className={`h-4 w-4 mt-3 text-teal-800 hover:text-teal-300`} />
+                            className={`bg-transparent h-4 w-4 mt-3 text-teal-800 hover:text-teal-300`} />
                     </button>
                 </div>
             </div>

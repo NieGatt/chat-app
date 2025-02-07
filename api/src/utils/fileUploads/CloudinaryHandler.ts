@@ -16,6 +16,6 @@ export class CloudinaryHandler {
             }
         )
 
-        return { picture_id: result.public_id, url: result.url }
+        return result.url
     }
 }

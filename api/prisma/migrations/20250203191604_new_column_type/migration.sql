@@ -1,5 +1,0 @@
--- CreateEnum
-CREATE TYPE "UserType" AS ENUM ('STANDARD_AUTH', 'GOOGLE_OAUTH20');
-
--- AlterTable
-ALTER TABLE "User" ADD COLUMN     "type" "UserType" NOT NULL DEFAULT 'STANDARD_AUTH';
