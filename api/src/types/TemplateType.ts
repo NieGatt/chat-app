@@ -1,1 +1,0 @@
-export type TemplateType = "email-verification" | "forgot-password" 

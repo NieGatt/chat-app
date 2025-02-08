@@ -6,6 +6,6 @@ export const FindUserController = async (req: Request, res: Response) => {
     const { name } = <{ name: string }>req.params
     const page = req.query?.page
 
-    const users = await FindUserService(id, name, page ? Number(page) : 1)
+    const users = await FindUserService({ id, name, page: page ? Number(page) : 1 })
     res.status(200).json(users)
 }

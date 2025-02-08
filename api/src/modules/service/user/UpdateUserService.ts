@@ -2,17 +2,14 @@ import { prisma } from "../../../utils/prisma";
 import { CloudinaryHandler } from "../../../utils/fileUploads/CloudinaryHandler";
 import * as fs from "fs";
 import * as path from "path";
+import { IUpdateUser } from "../../../interfaces/IUpdateUser";
 
-export const UpdateUserService = async (
-    id: string,
-    name: string,
-    filePath?: string
-) => {    
-    if (filePath) {
-        const directory = path.dirname(filePath)
-        const newPath = path.join(directory, `${id}${path.extname(filePath)}`)
+export const UpdateUserService = async (data: IUpdateUser) => {
+    if (data.filePath) {
+        const directory = path.dirname(data.filePath)
+        const newPath = path.join(directory, `${data.id}${path.extname(data.filePath)}`)
 
-        fs.renameSync(filePath, newPath)
+        fs.renameSync(data.filePath, newPath)
 
         const foldrPath = "profile-pictures"
 
@@ -20,7 +17,7 @@ export const UpdateUserService = async (
         const url = await cloudinaryHandler.uploadProflePicture(newPath, foldrPath)
 
         await prisma.user.update({
-            where: { id },
+            where: { id: data.id },
             data: {
                 pictureUrl: url
             }
@@ -29,5 +26,8 @@ export const UpdateUserService = async (
         fs.unlinkSync(newPath)
     }
 
-    await prisma.user.update({ where: { id }, data: { name } })
+    await prisma.user.update({
+        where: { id: data.id },
+        data: { name: data.name }
+    })
 }

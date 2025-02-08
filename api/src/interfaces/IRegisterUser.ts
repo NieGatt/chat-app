@@ -1,6 +1,2 @@
-export interface IRegisterUser {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-}
+import { iUserFields } from "./IUserFields";
+export interface IRegisterUser extends Omit<iUserFields, "pictureUrl"> { }

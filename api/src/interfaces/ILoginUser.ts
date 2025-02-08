@@ -1,4 +1,2 @@
-export interface ILoginUser {
-    email: string;
-    password: string;
-}
+import { iUserFields } from "./IUserFields";
+export interface ILoginUser extends Readonly<Pick<iUserFields, "email" | "password">> { }

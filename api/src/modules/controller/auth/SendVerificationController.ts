@@ -1,15 +1,19 @@
 import { Request, Response } from "express";
 import { SendVerificationService } from "../../service/auth/SendVeriicationService";
-import { TemplateType } from "../../../types/TemplateType";
+import { ISendVerification } from "../../../interfaces/ISendVerification";
+
+type Template = "email-verification" | "forgot-password"
 
 export const SendVerificationController = async (req: Request, res: Response) => {
-    const template = req.params.template as TemplateType
-    const { email } = <{ email: string }>req.body
+    const data: ISendVerification = {
+        email: req.body.email,
+        template: req.params.template as Template
+    }
 
-    await SendVerificationService(email, template);
+    await SendVerificationService(data);
 
     res.status(200).json({
-        result: `We sent an email to ${email}`,
+        result: `We sent an email to ${data.email}`,
         statusCode: 200
     });
 }

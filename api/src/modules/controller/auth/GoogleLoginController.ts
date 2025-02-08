@@ -1,10 +1,10 @@
 import { Response } from "express";
 import { v4 as uuid } from "uuid";
 import { GoogleLoginService } from "../../service/auth/GoogleLoginService";
-import { IGoogleLoginUser } from "../../../interfaces/IGoogleLoginUser";
+import { IGoogleUser } from "../../../interfaces/IGoogleUser";
 
 export const GoogleLoginController = async (req: any,  res: Response) => {
-    const { email, name, pictureUrl } = req.user as IGoogleLoginUser
+    const { email, name, pictureUrl }: IGoogleUser = req.user
 
     const accessToken = await GoogleLoginService({ 
         id: uuid(),

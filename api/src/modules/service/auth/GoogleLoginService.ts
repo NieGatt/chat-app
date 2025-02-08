@@ -1,8 +1,8 @@
-import { IGoogleLoginUser } from "../../../interfaces/IGoogleLoginUser";
 import { prisma } from "../../../utils/prisma";
+import { IGoogleUser } from "../../../interfaces/IGoogleUser";
 import { JwtTokenHandler } from "../../../utils/JwtTokenHandler";
 
-export const GoogleLoginService = async (data: IGoogleLoginUser) => {
+export const GoogleLoginService = async (data: IGoogleUser) => {
     const user = await prisma.user.findUnique({ where: { email: data.email } })
 
     const accessToken = JwtTokenHandler.accessToken(user?.id ?? data.id);

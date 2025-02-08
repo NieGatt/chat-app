@@ -1,11 +1,12 @@
+import { IFindUser } from "../../../interfaces/IFindUser";
 import { prisma } from "../../../utils/prisma";
 
-export const FindUserService = async (id: string, name: string, page: number) => {
+export const FindUserService = async (data: IFindUser) => {
     const usersCount = await prisma.user.count({
         where: {
-            id: { not: id },
+            id: { not: data.id },
             name: {
-                contains: name,
+                contains: data.name,
                 mode: "insensitive"
             }
         }
@@ -16,17 +17,17 @@ export const FindUserService = async (id: string, name: string, page: number) =>
 
     const pageNumber = !totalPages
         ? 1
-        : page > totalPages
+        : data.page > totalPages
             ? totalPages
-            : page
+            : data.page
 
     const users = await prisma.user.findMany({
         skip: (pageNumber - 1) * pageSize,
         take: pageSize,
         where: {
-            id: { not: id },
+            id: { not: data.id },
             name: {
-                contains: name,
+                contains: data.name,
                 mode: "insensitive"
             }
         },

@@ -4,7 +4,7 @@ import { HashingHandler } from "../../../utils/HashingHandler";
 import { JwtTokenHandler } from "../../../utils/JwtTokenHandler";
 import { prisma } from "../../../utils/prisma";
 
-export const LoginService = async (data: ILoginUser) => {
+export const LoginService = async (data: Readonly<ILoginUser>) => {
     const user = await prisma.user.findUnique({ where: { email: data.email } });
 
     if (!user) throw new NotFound("User not found");

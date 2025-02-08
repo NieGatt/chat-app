@@ -1,12 +1,12 @@
 import { transporter } from "./NodeMailerConfig";
-import { ISendEmailHandler } from "../../interfaces/ISendEmailHandler";
 import { templateHandler } from "../template/TemplateHandler";
+import { ISendEmail } from "../../interfaces/ISendEmail";
 
-export const deliverEmail = async (data: ISendEmailHandler) => {
+export const deliverEmail = async (data: ISendEmail) => {
     const template = templateHandler({
         name: data.name,
         token: data.token,
-        templateName: data.templateName
+        templateName: data.template
     });
 
     await transporter.sendMail({

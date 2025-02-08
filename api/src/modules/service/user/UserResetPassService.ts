@@ -1,42 +1,25 @@
 import { prisma } from "../../../utils/prisma";
 import { HashingHandler } from "../../../utils/HashingHandler";
-import { IUserResetPass } from "../../../interfaces/IUserResetPass";
 import { BadRequest, Conflict } from "../../../utils/exceptions/ExceptionHandler";
+import { IResetPass } from "../../../interfaces/IResetPass";
 
-interface User extends IUserResetPass {
-    id: string
-}
-
-export const UserResetPassService = async (data: User) => {
+export const UserResetPassService = async (data: IResetPass) => {
     const user = await prisma.user.findUnique({ where: { id: data.id } })
-    const hashingHandler = new HashingHandler()
 
-    if (user?.type === "GOOGLE_OAUTH20") {
-        if (user.password) {
-            const isTheSame = HashingHandler.compareData(data.password, user.password)
-            if (isTheSame) throw new Conflict("Password cannot be equal to the current one")
-        }
+    if (!user) return
 
-        const hashedPass = HashingHandler.hashData(data.password)
-        await prisma.user.update({
-            where: { id: user.id },
-            data: { password: hashedPass }
-        })
-        return
+    else if (user.password) {
+        const isTheSame = HashingHandler.compareData(data.password, user.password)
+        if (isTheSame) throw new Conflict("Password cannot be equal to the current one")
     }
 
-    else if (user?.type === "STANDARD_AUTH" && data.currentPassword) {
+    else if (user?.type === "STANDARD_AUTH") {
+        if (!data.currentPassword) return
 
         const isEqual = HashingHandler.compareData(data.currentPassword, user.password!)
         if (!isEqual) throw new BadRequest("Incorrect current password")
-
-        const isTheSame = HashingHandler.compareData(data.password, user.password!)
-        if (isTheSame) throw new Conflict("Password cannot be equal to the current one")
-
-        const hashedPass = HashingHandler.hashData(data.password)
-        await prisma.user.update({
-            where: { id: user.id },
-            data: { password: hashedPass }
-        })
     }
+
+    const hashedPass = HashingHandler.hashData(data.password)
+    await prisma.user.update({ where: { id: user.id }, data: { password: hashedPass } })
 }

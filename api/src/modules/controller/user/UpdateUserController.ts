@@ -6,7 +6,7 @@ export const UpdateUserController = async (req: Request, res: Response) => {
     const filePath = req.file?.path
     const name = req.body.name
 
-    await UpdateUserService(id, name, filePath)
+    await UpdateUserService({id, name, filePath})
     res.status(200).json({
         result: "ok",
         statusCode: 200

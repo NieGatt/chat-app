@@ -1,14 +1,11 @@
-import { TemplateType } from "../../../types/TemplateType";
 import { NotFound } from "../../../utils/exceptions/ExceptionHandler";
 import { deliverEmail } from "../../../utils/nodemailer/EmailSendingHandler";
 import { JwtTokenHandler } from "../../../utils/JwtTokenHandler";
 import { prisma } from "../../../utils/prisma";
+import { ISendVerification } from "../../../interfaces/ISendVerification";
 
-export const SendVerificationService = async (
-    email: string,
-    template: TemplateType
-) => {
-    const user = await prisma.user.findUnique({ where: { email: email } });
+export const SendVerificationService = async (data: ISendVerification) => {
+    const user = await prisma.user.findUnique({ where: { email: data.email } });
 
     if (!user) throw new NotFound("User not found");
 
@@ -18,6 +15,6 @@ export const SendVerificationService = async (
         name: user.name,
         email: user.email,
         token: verificationToken,
-        templateName: template
+        template: data.template
     });
 }
