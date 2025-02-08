@@ -1,7 +1,7 @@
 import { cloudinary } from "./CloudinaryConfig";
 
 export class CloudinaryHandler {
-    async uploadProflePicture(
+    async uploadfile(
         filePath: string,
         folderPath: string
     ) {
@@ -11,7 +11,6 @@ export class CloudinaryHandler {
                 use_filename: true,
                 overwrite: true,
                 unique_filename: false,
-                chunk_size: 10000,
                 folder: `chat-app/${folderPath}`
             }
         )

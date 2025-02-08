@@ -23,7 +23,8 @@ model User {
   refreshToken String?  @unique
   createdAt    DateTime @default(now())
 
-  messages Message[]
+  receiver Message[]
+  sender   Message[] @relation("send")
   chats    Chat[]
 }
 
@@ -39,8 +40,11 @@ model Message {
   status    StatusMSG @default(NOT_SEEN)
   createdAt DateTime  @default(now())
 
-  user_id String @db.VarChar(36)
-  user    User   @relation(fields: [user_id], references: [id], onUpdate: Cascade)
+  receiver_id String @db.VarChar(36)
+  receiver    User   @relation("send", fields: [receiver_id], references: [id], onUpdate: Cascade)
+
+  sender_id String @db.VarChar(36)
+  sender    User   @relation(fields: [sender_id], references: [id], onUpdate: Cascade)
 
   chat_id String @db.VarChar(36)
   chat    Chat   @relation(fields: [chat_id], references: [id], onDelete: Cascade)

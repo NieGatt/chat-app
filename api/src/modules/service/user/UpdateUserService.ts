@@ -14,7 +14,7 @@ export const UpdateUserService = async (data: IUpdateUser) => {
         const foldrPath = "profile-pictures"
 
         const cloudinaryHandler = new CloudinaryHandler()
-        const url = await cloudinaryHandler.uploadProflePicture(newPath, foldrPath)
+        const url = await cloudinaryHandler.uploadfile(newPath, foldrPath)
 
         await prisma.user.update({
             where: { id: data.id },

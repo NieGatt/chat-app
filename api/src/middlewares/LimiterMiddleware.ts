@@ -11,14 +11,14 @@ const LimiterMiddleware = (req: Request, res: Response) => {
 }
 
 const standardLimiterMiddleware = rateLimit({
-    limit: 80,
-    windowMs: 720000,
+    limit: 70,
+    windowMs: 12 * 60 * 1000,
     handler: LimiterMiddleware
 })
 
 const strictLimiterMiddleware = rateLimit({
-    limit: 12,
-    windowMs: 60000,
+    limit: 20,
+    windowMs: 10 * 60 * 1000,
     handler: LimiterMiddleware
 })
 

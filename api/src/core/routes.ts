@@ -28,6 +28,10 @@ const ProfileUpload = UploadMiddleware(
     10 * 1024 * 1024, ["image/png", "image/jpeg", "image/jpg"]
 )
 
+const ChatUpload = UploadMiddleware(
+    100 * 1024 * 1024, ["image/png", "image/jpeg", "image/jpg", "video/mp4"]
+)
+
 router.post("/register",
     strictLimiterMiddleware,
     ValidationDataMiddleware(fieldsSchema.pick({
@@ -89,7 +93,7 @@ router.put("/user/reset-password",
 )
 
 router.put("/user",
-    strictLimiterMiddleware, CookieMiddleware, ProfileUpload.single("fileImage"),
+    standardLimiterMiddleware, CookieMiddleware, ProfileUpload.single("fileImage"),
     ValidationDataMiddleware(fieldsSchema.pick({ name: true })),
     UpdateUserController
 )
@@ -100,6 +104,10 @@ router.get("/user/:name([a-zA-ZÀ-ú\\s]{3,50})",
 
 router.get("/chat",
     standardLimiterMiddleware, CookieMiddleware, FindUserChatsController
+)
+
+router.post("/chat/:receiver_id/chat_id?",
+    standardLimiterMiddleware, CookieMiddleware, ChatUpload.single("chatFile")
 )
 
 export { router };

@@ -17,13 +17,23 @@ export const FindUserChatsService = async (id: string) => {
                     fileUrl: true,
                     status: true,
                     createdAt: true,
-                    user: {
-                        select: {
-                            id: true,
-                            name: true,
-                            pictureUrl: true
-                        }
-                    }
+                    id: true,
+                    receiver_id: true,
+                    sender_id: true,
+                    chat_id: true
+                },
+                orderBy: {
+                    createdAt: "desc"
+                }
+            },
+            users: {
+                where: {
+                    id: { not: id },
+                },
+                select: {
+                    id: true,
+                    name: true,
+                    pictureUrl: true
                 }
             }
         }
@@ -34,18 +44,21 @@ export const FindUserChatsService = async (id: string) => {
         return {
             chat_id: chat.id,
             messages: chat.messages.map(message => ({
-                user: {
-                    id: message.user.id,
-                    name: message.user.name,
-                    pictureUrl: message.user.pictureUrl
-                },
                 text: message.text,
                 fileUrl: message.fileUrl,
                 status: message.status,
-                createdAt: message.createdAt
+                createdAt: message.createdAt,
+                sender_id: message.sender_id,
+                receiver_id: message.receiver_id,
+                chat_id: message.chat_id
+            })),
+            partner: chat.users.map(partner => ({
+                id: partner.id,
+                name: partner.name,
+                pictureUrl: partner.pictureUrl
             }))
         }
     })
 
     return data
-}
+}      
