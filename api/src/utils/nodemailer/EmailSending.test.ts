@@ -10,7 +10,7 @@ const mockedTransporter = <jest.Mocked<typeof transporter>>transporter
 describe("testing email transporter", () => {
     it("should be called with correct parameters", async () => {
         deliverEmail({
-            templateName: "email-verification",
+            template: "email-verification",
             name: "Joana Doe",
             email: "example@account.com",
             token: "Some-Token"

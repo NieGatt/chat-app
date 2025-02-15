@@ -11,6 +11,13 @@ export const FindUserChatsService = async (id: string) => {
         },
         select: {
             id: true,
+            _count: {
+                select: {
+                    messages: {
+                        where: { status: "NOT_SEEN" }
+                    }
+                }
+            },
             messages: {
                 select: {
                     text: true,
@@ -52,11 +59,8 @@ export const FindUserChatsService = async (id: string) => {
                 receiver_id: message.receiver_id,
                 chat_id: message.chat_id
             })),
-            partner: chat.users.map(partner => ({
-                id: partner.id,
-                name: partner.name,
-                pictureUrl: partner.pictureUrl
-            }))
+            not_seen_messages: chat._count.messages,
+            partner: chat.users[0]
         }
     })
 

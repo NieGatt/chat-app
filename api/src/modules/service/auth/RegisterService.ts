@@ -21,7 +21,7 @@ export const RegisterService = async (data: IRegisterUser) => {
             name: newUser.name,
             email: newUser.email,
             token: verificationToken,
-            templateName: "email-verification"
+            template: "email-verification"
         });
     }
 }

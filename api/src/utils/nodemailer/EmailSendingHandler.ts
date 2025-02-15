@@ -6,7 +6,7 @@ export const deliverEmail = async (data: ISendEmail) => {
     const template = templateHandler({
         name: data.name,
         token: data.token,
-        templateName: data.template
+        template: data.template
     });
 
     await transporter.sendMail({

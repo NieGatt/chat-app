@@ -5,7 +5,7 @@ const config: Config = {
     moduleFileExtensions: ["ts", "js"],
     preset: "ts-jest",
     rootDir: "src",
-    testRegex: ".*\\.test\\.ts$"
+    testRegex: "*\\.test\\.ts$"
 };
 
 export default config;

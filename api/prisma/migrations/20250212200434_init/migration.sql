@@ -26,7 +26,8 @@ CREATE TABLE "Message" (
     "fileUrl" TEXT,
     "status" "StatusMSG" NOT NULL DEFAULT 'NOT_SEEN',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "user_id" VARCHAR(36) NOT NULL,
+    "receiver_id" VARCHAR(36) NOT NULL,
+    "sender_id" VARCHAR(36) NOT NULL,
     "chat_id" VARCHAR(36) NOT NULL,
 
     CONSTRAINT "Message_pkey" PRIMARY KEY ("id")
@@ -63,7 +64,10 @@ CREATE UNIQUE INDEX "Chat_id_key" ON "Chat"("id");
 CREATE INDEX "_ChatToUser_B_index" ON "_ChatToUser"("B");
 
 -- AddForeignKey
-ALTER TABLE "Message" ADD CONSTRAINT "Message_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Message" ADD CONSTRAINT "Message_receiver_id_fkey" FOREIGN KEY ("receiver_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Message" ADD CONSTRAINT "Message_sender_id_fkey" FOREIGN KEY ("sender_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_chat_id_fkey" FOREIGN KEY ("chat_id") REFERENCES "Chat"("id") ON DELETE CASCADE ON UPDATE CASCADE;
