@@ -51,6 +51,7 @@ export const FindUserChatsService = async (id: string) => {
         return {
             chat_id: chat.id,
             messages: chat.messages.map(message => ({
+                id: message.id,
                 text: message.text,
                 fileUrl: message.fileUrl,
                 status: message.status,

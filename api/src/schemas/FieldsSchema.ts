@@ -7,6 +7,8 @@ const fieldsSchema = z.object({
                 message: "Name must contain 3 to 50 characters (letters/spaces)"
             })
             .trim(),
+            
+    text: z.string().regex(/^[a-zA-ZÀ-ú\s\?><\.,\]\[\)\(\+\=_\*&\^%\$#@\!`;:'"\|\\\-]{1,500}$/, { message: "text field does not match regex: /^[a-zA-ZÀ-ú\s\?><\.,\]\[\)\(\+\=_\*&\^%\$#@\!`;:'\"\|\\\-]{1,500}$/" }).optional(),
 
     email:
         z.string({ message: "Email Is Requred" })

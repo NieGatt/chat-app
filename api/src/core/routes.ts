@@ -111,6 +111,7 @@ router.get("/chat",
 
 router.post("/chat/:receiver_id([a-f0-9\-])/chat_id([a-f0-9\-])?",
     standardLimiterMiddleware, CookieMiddleware, chatUpload.single("file"),
+    ValidationDataMiddleware(fieldsSchema.pick({ text: true })),
     SendMessageController
 )
 

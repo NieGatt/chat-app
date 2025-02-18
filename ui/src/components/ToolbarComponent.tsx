@@ -1,10 +1,10 @@
-import { RxAvatar } from "react-icons/rx";
 import { IoMdHome } from "react-icons/io";
 import { IoMdLogOut } from "react-icons/io";
 import { IoChatbubbleEllipses } from "react-icons/io5";
 import { IoSettings } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "../context/UserDataContext";
+import { PictureComponent } from "./PictureComponent";
 
 export const ToolbarComponent = ({
     handleClick,
@@ -28,16 +28,7 @@ export const ToolbarComponent = ({
     return (
         <>
             <div className="h-full w-12 bg-black bg-opacity-20 flex flex-col items-center justify-between gap-y-8 py-5">
-                <div
-                    className="flex justify-center items-center text-white rounded-full w-8 h-8">
-                    {
-                        !user?.pictureUrl ? (
-                            <RxAvatar className="w-full bg-transparent rounded-full h-full" />
-                        ) : (
-                            <img src={user.pictureUrl} alt="picture" className="w-full h-full rounded-full" />
-                        )
-                    }
-                </div>
+            <PictureComponent url={user && user.pictureUrl} style="w-8 h-8" />
 
                 <div className="bg-transparent flex flex-col gap-y-3">
                     <IoMdHome

@@ -1,13 +1,23 @@
 import { z } from "zod";
 
 const fieldsSchema = z.object({
+    file:
+        z.instanceof(File)
+            .refine((file) => file.size <= 100 * 1024 * 1024, "File cannot exceed 100MB")
+            .refine((file) =>
+                ["image/jpeg", "image/jpg", "image/png", "image/mp4"].includes(file.type),
+                "File extension does not match .jpeg, .png, .jpg, .mp4")
+            .optional(),
+
     fileImage:
         z.instanceof(File)
-        .refine((file) => file.size <= 10 * 1024 * 1024, "File cannot exceed 10MB")
-        .refine((file) =>
+            .refine((file) => file.size <= 10 * 1024 * 1024, "File cannot exceed 10MB")
+            .refine((file) =>
                 ["image/jpeg", "image/jpg", "image/png"].includes(file.type),
                 "File extension does not match .jpeg, .png, .jpg")
             .optional(),
+
+    text: z.string().regex(/^[a-zA-ZÀ-ú\s\?><\.,\]\[\)\(\+\=_\*&\^%\$#@\!`;:'"\|\\\-]{1,500}$/, { message: "text field does not match regex: /^[a-zA-ZÀ-ú\s\?><\.,\]\[\)\(\+\=_\*&\^%\$#@\!`;:'\"\|\\\-]{1,500}$/" }).optional(),
 
     name: z.string({ message: "Name Is Requred" }).regex(/^[a-zA-ZÀ-ú\s]{3,50}$/,
         { message: "Name is 3-50 chars and space" }).trim(),

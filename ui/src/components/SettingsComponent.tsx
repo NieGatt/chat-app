@@ -13,6 +13,7 @@ import { FaEdit } from "react-icons/fa";
 import { RxAvatar } from "react-icons/rx";
 import { IUserEditProfile } from "../interfaces/IUserEditProfile";
 import { useFormData } from "../hooks/useFormData";
+import { PictureComponent } from "./PictureComponent";
 
 export const SettingsComponent = () => {
     const [currentOption, setCurrentOption] = useState(1)
@@ -119,19 +120,11 @@ export const SettingsComponent = () => {
                                     </div>
 
                                     <div className="w-60 flex flex-col items-center">
-                                        <div className="rounded-full w-32 h-32">
-                                            {
-                                                !user?.pictureUrl ? (
-                                                    <RxAvatar className="w-full bg-transparent rounded-full h-full" />
-                                                ) : user.pictureUrl || imagePreview ? (
-                                                    <img
-                                                        src={imagePreview || user.pictureUrl}
-                                                        alt="profile"
-                                                        className="rounded-full h-full w-full"
-                                                    />
-                                                ) : null
-                                            }
-                                        </div>
+
+                                    <PictureComponent url={
+                                        imagePreview ? imagePreview : user ? user.pictureUrl : null
+                                        } style="w-28 h-28" />
+
                                         <div className="w-full mt-2 relative flex items-center bg-transparent hover:opacity-90 flex-col">
                                             <div className="flex gap-x-2 items-center bg-teal-600 px-2  rounded">
                                                 <p className="bg-transparent text-[12px]">Edit</p>

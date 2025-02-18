@@ -6,5 +6,5 @@ export interface IMessageData {
     receiver_id: string;
     sender_id: string;
     chat_id: string;
-    status: string
+    status: "SEEN" | "NOT_SEEN"
 }
