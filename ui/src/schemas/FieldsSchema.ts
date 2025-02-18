@@ -17,7 +17,7 @@ const fieldsSchema = z.object({
                 "File extension does not match .jpeg, .png, .jpg")
             .optional(),
 
-    text: z.string().regex(/^[a-zA-ZÀ-ú\s\?><\.,\]\[\)\(\+\=_\*&\^%\$#@\!`;:'"\|\\\-]{1,500}$/, { message: "text field does not match regex: /^[a-zA-ZÀ-ú\s\?><\.,\]\[\)\(\+\=_\*&\^%\$#@\!`;:'\"\|\\\-]{1,500}$/" }).optional(),
+    text: z.string().regex(/^[a-zA-ZÀ-ú0-9\s\?><\.,\]\[\)\(\+\=_\*&\^%\$#@\!`;:'"\|\\\-]{1,500}$/, { message: "text field does not match regex: /^[a-zA-ZÀ-ú\s\?><\.,\]\[\)\(\+\=_\*&\^%\$#@\!`;:'\"\|\\\-]{1,500}$/" }).optional(),
 
     name: z.string({ message: "Name Is Requred" }).regex(/^[a-zA-ZÀ-ú\s]{3,50}$/,
         { message: "Name is 3-50 chars and space" }).trim(),

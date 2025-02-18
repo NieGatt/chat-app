@@ -9,7 +9,10 @@ import { fieldsSchema } from "../schemas/FieldsSchema"
 import { useFormData } from "../hooks/useFormData"
 import { AiOutlineLoading3Quarters } from "react-icons/ai"
 
-type SendMSG = { text: string, file: HTMLInputElement }
+interface InputsMessage {
+    text?: string;
+    file?: File
+}
 
 export const ChatComponent = () => {
     const { data, handleGetData } = useGetData<IChatsData[]>()
@@ -28,8 +31,9 @@ export const ChatComponent = () => {
         loading,
         register,
         submitHandler,
-        errors
-    } = useFormData<SendMSG>(schema, url, "POST")
+        errors,
+        setValue
+    } = useFormData<InputsMessage>(schema, url, "POST")
 
     useEffect(() => {
         (async () => handleGetData())()
@@ -108,6 +112,7 @@ export const ChatComponent = () => {
                                                 {
                                                     message.sender_id === selecetedUser.partner.id ? (
                                                         <section
+                                                            key={message.id}
                                                             className={`gap-x-2 flex text-white justify-start`}>
 
                                                             <PictureComponent
@@ -116,22 +121,65 @@ export const ChatComponent = () => {
                                                             />
 
                                                             <div
-                                                                style={{ maxWidth: "340px" }}
-                                                                className="flex flex-col bg-emerald-800 py-1 px-4 rounded-lg mt-2">
-                                                                <p>{message.fileUrl}</p>
-                                                                <p className="bg-transparent break-words">{message.text}</p>
+                                                                style={{ maxWidth: "320px" }}
+                                                                className="flex flex-col bg-emerald-800  rounded-lg mt-2 px-3 py-1">
+
+                                                                {
+                                                                    message.fileUrl && (
+                                                                        message.fileUrl.match(/.(jpeg|jpg|png)/g)
+                                                                            ? (
+                                                                                
+                                                                                <img
+                                                                                    className="rounded-lg w-full"
+                                                                                    src={message.fileUrl || undefined}
+                                                                                    alt="file" />
+
+                                                                            ) : message.fileUrl.match(/.mp4/g) ? (
+
+                                                                                <video className="rounded-lg" controls>
+                                                                                    <source src={`${message.fileUrl}`} type="video/mp4" />
+                                                                                    Ops!
+                                                                                </video>
+
+                                                                            ) : null
+                                                                    )
+                                                                }
+
+                                                                <p className="bg-transparent text-sm break-words">{message.text}</p>
                                                             </div>
 
                                                         </section>
                                                     ) : user ? (
                                                         <section
+                                                            key={message.id}
                                                             className={`gap-x-2 flex text-white justify-end`}>
 
                                                             <div
-                                                                style={{ maxWidth: "340px" }}
-                                                                className="flex flex-col bg-emerald-800 py-1 px-3 rounded-lg mt-2">
-                                                                <p>{message.fileUrl}</p>
-                                                                <p className="text-end bg-transparent break-words">{message.text}</p>
+                                                                style={{ maxWidth: "320px" }}
+                                                                className="flex flex-col bg-emerald-800  rounded-lg mt-2 px-3 py-1">
+
+                                                                {
+                                                                    message.fileUrl && (
+                                                                        message.fileUrl.match(/.(jpeg|jpg|png)/g)
+                                                                            ? (
+
+                                                                                <img
+                                                                                    className="rounded-lg w-full"
+                                                                                    src={message.fileUrl || undefined}
+                                                                                    alt="file" />
+
+                                                                            ) : message.fileUrl.match(/.mp4/g) ? (
+
+                                                                                <video className="rounded-lg" controls>
+                                                                                    <source src={`${message.fileUrl}`} type="video/mp4" />
+                                                                                    Ops!
+                                                                                </video>
+
+                                                                            ) : null
+                                                                    )
+                                                                }
+
+                                                                <p className="bg-transparent text-sm break-words">{message.text}</p>
                                                             </div>
 
                                                             <PictureComponent
@@ -161,6 +209,7 @@ export const ChatComponent = () => {
                                 <AiFillPicture className="h-12 w-10 text-emerald-900" />
 
                                 <button
+                                    type="submit"
                                     onClick={() => setUrl(`http://localhost:3000/chat/${selecetedUser.partner.id}/${selecetedUser.chat_id}`)}
                                     className="text-white rounded bg-emerald-700 w-44 h-[26px] hover:bg-emerald-600 flex justify-center items-center">
                                     {
@@ -174,7 +223,7 @@ export const ChatComponent = () => {
                                     type="file"
                                     className="absolute right-44 w-10 opacity-0"
                                     accept="image/jpeg, image/jpg, image/png, video/mp4"
-                                    {...register("file")}
+                                    onChange={(e) => setValue("file", e.target.files?.[0] || undefined)}
                                 />
                             </form>
                         </>

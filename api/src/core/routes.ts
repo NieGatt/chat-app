@@ -109,7 +109,7 @@ router.get("/chat",
     standardLimiterMiddleware, CookieMiddleware, FindUserChatsController
 )
 
-router.post("/chat/:receiver_id([a-f0-9\-])/chat_id([a-f0-9\-])?",
+router.post("/chat/:receiver_id([a-f0-9-]{36})/:chat_id([a-f0-9-]{36})?",
     standardLimiterMiddleware, CookieMiddleware, chatUpload.single("file"),
     ValidationDataMiddleware(fieldsSchema.pick({ text: true })),
     SendMessageController

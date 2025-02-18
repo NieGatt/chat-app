@@ -10,7 +10,6 @@ import { IUserResetPass } from "../interfaces/IUserResetPass"
 import { useUserData } from "../context/UserDataContext"
 import { Link } from "react-router-dom"
 import { FaEdit } from "react-icons/fa";
-import { RxAvatar } from "react-icons/rx";
 import { IUserEditProfile } from "../interfaces/IUserEditProfile";
 import { useFormData } from "../hooks/useFormData";
 import { PictureComponent } from "./PictureComponent";
