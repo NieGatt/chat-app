@@ -1,11 +1,12 @@
 import { useState } from "react"
 
-export const useGetData = <T>() => {
-    const [loading, setLoading] = useState<boolean>(true)
+export const useGetData = <T>(url: string) => {
+    const [loading, setLoading] = useState<boolean>(false)
     const [data, setData] = useState<T | null>(null)
 
     const handleGetData = async () => {
-        const res = await fetch("http://localhost:3000/chat", {
+        setLoading(true)
+        const res = await fetch(url, {
             method: "GET",
             credentials: "include"
         })
@@ -16,5 +17,5 @@ export const useGetData = <T>() => {
         setLoading(false)
     }
 
-    return { loading, data,  handleGetData}
+    return { loading, data, handleGetData }
 }

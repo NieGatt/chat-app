@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { io, Socket } from "socket.io-client"
 import { useGetData } from "../hooks/useGetData"
 import { IChatsData } from "../interfaces/IChatsData"
@@ -8,6 +8,12 @@ import { AiFillPicture } from "react-icons/ai";
 import { fieldsSchema } from "../schemas/FieldsSchema"
 import { useFormData } from "../hooks/useFormData"
 import { AiOutlineLoading3Quarters } from "react-icons/ai"
+import { FaImage } from "react-icons/fa";
+import { IChatMessages } from "../interfaces/IChatMessages"
+import { IoIosSearch } from "react-icons/io";
+import { IFindUsers } from "../interfaces/IFindUsers"
+import { IoIosAddCircle } from "react-icons/io";
+
 
 interface InputsMessage {
     text?: string;
@@ -15,77 +21,197 @@ interface InputsMessage {
 }
 
 export const ChatComponent = () => {
-    const { data, handleGetData } = useGetData<IChatsData[]>()
-    const [selecetedUser, setSelectedUser] = useState<IChatsData | null>(data?.[0] ?? null)
+    const [messages, setMessages] = useState<IChatMessages[] | null>(null)
+    const [selectedChat, setSelectedChat] = useState<IChatsData | null>(null)
+
     const [url, setUrl] = useState<string>("")
+    const [inputValue, setInputValue] = useState("")
 
+    const chatUrl = "http://localhost:3000/chat"
+    const searchUrl = `http://localhost:3000/user/${inputValue}`
+
+    const socketRef = useRef<Socket | null>(null)
+    const lastElement = useRef<HTMLDivElement | null>(null)
     const { user } = useUserData()
+    const schema = fieldsSchema.pick({ file: true, text: true })
 
-    const handleSelectUser = (id: string) => {
-        setSelectedUser(data?.find(chat => chat.partner.id === id) ?? null)
+    const {
+        data: chatData,
+        handleGetData: handleChatData
+    } = useGetData<IChatsData[]>(chatUrl)
+
+    const {
+        data: searchedData,
+        handleGetData: handleSearchData,
+        loading: loadingSearch
+    } = useGetData<IFindUsers[]>(searchUrl)
+
+    const handleChatCreation = async (id: string) => {
+        const url = `http://localhost:3000/chat/create/${id}`
+        await fetch(url, {
+            method: "POST",
+            credentials: "include"
+        })
     }
 
-    const schema = fieldsSchema.pick({ file: true, text: true })
+    const joinChatHandler = (chat_id: string) => {
+        const chat = chatData?.find(chat => chat.chat_id === chat_id)
+
+        if (chat) {
+            setSelectedChat(chat)
+            socketRef.current?.emit("join-chat", chat_id)
+            socketRef.current?.on("messages", (data) => {
+                setMessages(data)
+            })
+        }
+    }
 
     const {
         loading,
         register,
         submitHandler,
-        errors,
-        setValue
+        setValue,
+        statusCode,
+        setStatusCode
     } = useFormData<InputsMessage>(schema, url, "POST")
 
     useEffect(() => {
-        (async () => handleGetData())()
+        socketRef.current = io("http://localhost:3000");
+        let interval: NodeJS.Timeout;
+
+        if (!chatData) {
+            (async () => handleChatData())()
+        }
+
+        interval = setInterval(() => {
+            (async () => handleChatData())()
+        }, 30 * 1000);
+
+        return () => {
+            clearInterval(interval)
+        }
     }, [])
 
-    console.log(errors)
+    useEffect(() => {
+        if (!socketRef.current) return;
+
+        const socket = socketRef.current
+
+        socket.off("new-message")
+        socket.off("new-message-recovery")
+
+        if (statusCode === 201 && selectedChat) {
+            socket.emit("new-message-recovery", selectedChat.chat_id)
+
+            socket.on("new-message", (message: IChatMessages) => {
+                setMessages(prev => [...(prev || []), message]);
+            })
+
+            setStatusCode(0)
+        }
+    }, [statusCode, submitHandler])
+
+    useEffect(() => {
+        lastElement.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages])
 
     return (
         <section className="flex w-full h-full">
             <section className="flex flex-col text-white h-full w-56 mx-3 justify-start p-3">
 
-                <form className="mt-4 flex justify-between items-center">
-                    <h1 className="font-bold text-xl">CHATS</h1>
-                    <input
-                        type="text"
-                        className="bg-teal-900 items-center h-5 text-xs rounded-full w-32 outline-none px-2"
-                        placeholder="search..."
-                    />
-                </form>
+                <section style={{ maxHeight: "120px" }} className="flex flex-col w-full mt-4">
 
-                <section className="flex flex-col w-full h-full mt-1 mb-1 overflow-y-auto">
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault()
+                            handleSearchData()
+                        }}
+                        className="flex justify-between items-center gap-x-2">
+                        <button type="submit">
+                            <IoIosSearch className="bg-teal-700 rounded-full text-2xl p-1" />
+                        </button>
+
+                        <input
+                            type="text"
+                            className="bg-teal-900 w-44 items-center h-6 text-xs rounded-full outline-none px-3"
+                            placeholder="search..."
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                        />
+                    </form>
+
                     {
-                        data && data.length > 0 ? (
+                        loadingSearch ? (
+                            <div className="flex items-center mt-2 gap-x-2">
+                                <AiOutlineLoading3Quarters className="text-sm animate-spin bg-transparent" />
+                                <p className="text-[10px]">searching...</p>
+                            </div>
+                        ) : (
+                            <>
+                                {
+                                    searchedData && searchedData.length > 0 ? (
+                                        <div className="flex mt-2 flex-col overflow-y-auto">
+                                            {
+                                                searchedData.map(user => {
+                                                    return (
+                                                        <section
+                                                            key={user.id}
+                                                            className={`flex mt-2 py-1 px-2 relative items-center bg-emerald-950 rounded-lg hover:bg-emerald-800`}>
 
-                            data.map(chat => {
+                                                            <PictureComponent url={user.pictureUrl} style="w-7 h-7" />
+
+                                                            <div className="flex flex-col w-full text-white px-2 bg-transparent">
+                                                                <p className="bg-transparent text-sm">{user.name}</p>
+                                                            </div>
+                                                            <IoIosAddCircle
+                                                                onClick={() => handleChatCreation(user.id)}
+                                                                className="bg-transparent absolute right-2 top-[8px] h-5 w-5" />
+                                                        </section>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    ) : null
+                                }
+                            </>
+                        )
+                    }
+
+                </section>
+
+                <h1 className="font-bold mt-4">CHATS</h1>
+                <section className="flex flex-col w-full h-full mb-1 overflow-y-auto">
+                    {
+                        chatData && chatData.length > 0 ? (
+
+                            chatData.map(chat => {
                                 return (
                                     <section
                                         key={chat.chat_id}
-                                        onClick={() => handleSelectUser(chat.partner.id)}
-                                        className={`flex mt-2 py-1 px-2 relative items-center rounded-lg ${selecetedUser?.partner.id === chat.partner.id ? "bg-emerald-800" : "bg-emerald-950"} hover:bg-emerald-800`}>
+                                        onClick={() => joinChatHandler(chat.chat_id)}
+                                        className={`flex mt-2 py-1 px-2 relative items-center rounded-lg ${selectedChat?.partner.id === chat.partner.id ? "bg-emerald-800" : "bg-emerald-950"} hover:bg-emerald-800`}>
 
                                         <PictureComponent url={chat.partner.pictureUrl} style="w-7 h-7" />
 
                                         <div className="flex flex-col w-full text-white px-2 bg-transparent">
                                             <p className="bg-transparent text-sm">{chat.partner.name}</p>
 
-                                            <p className="bg-transparent text-[10px] opacity-70">
-                                                {(() => {
-                                                    const message = chat.messages.find(message => message?.text);
-                                                    return message ? (message!.text!.length > 20 ? message!.text!.slice(0, 20) + "..." : message.text) : null;
-                                                })()}
-                                            </p>
+                                            {
+                                                chat.messages && chat.messages.sender_id !== user?.id && (
+                                                    <p className={`bg-transparent ${chat.messages.status === "SEEN" ? "" : "text-emerald-400"} text-[10px]`}>
+                                                        {
+                                                            chat.messages.text ? (
+                                                                chat.messages.text.length > 30
+                                                                    ? chat.messages.text?.slice(0, 27) + "..."
+                                                                    : chat.messages.text
+                                                            ) : (
+                                                                <FaImage />
+                                                            )
+                                                        }
+                                                    </p>
+                                                )
+                                            }
                                         </div>
-
-                                        {
-                                            chat.not_seen_messages > 0 && (
-                                                <div
-                                                    className="flex justify-center items-center absolute right-2 text-xs flex bg-teal-700 rounded-full px-1">
-                                                    {chat.not_seen_messages}
-                                                </div>
-                                            )
-                                        }
                                     </section>
                                 )
                             })
@@ -94,32 +220,23 @@ export const ChatComponent = () => {
                 </section>
             </section>
 
-            <section className="w-[700px] flex flex-col p-3">
+            <section className="w-[670px] flex flex-col p-3">
 
                 {
-                    selecetedUser && (
+                    selectedChat ? (
                         <>
-                            <div className="bg-emerald-800 flex items-center text-white rounded-lg w-full flex mt-4 py-1 px-2">
-                                <PictureComponent url={selecetedUser.partner.pictureUrl} style="w-7 h-7" />
-                                <p className="bg-transparent ml-3">{selecetedUser.partner.name}</p>
-                            </div>
-
-                            <div className="w-full h-72 mb-2 overflow-y-auto">
+                            <div className="w-full h-[380px] flex flex-col mt-4 mb-1 overflow-y-auto">
                                 {
-                                    user && selecetedUser.messages.map(message => {
+                                    messages && messages.length > 0 && messages.map((message, index) => {
                                         return (
                                             <>
                                                 {
-                                                    message.sender_id === selecetedUser.partner.id ? (
+                                                    message.sender_id !== user?.id ? (
                                                         <section
                                                             key={message.id}
+                                                            ref={index === messages.length - 1 ? lastElement : null}
                                                             className={`gap-x-2 flex text-white justify-start`}>
 
-                                                            <PictureComponent
-                                                                url={selecetedUser.partner.pictureUrl}
-                                                                style="w-7 h-7"
-                                                            />
-
                                                             <div
                                                                 style={{ maxWidth: "320px" }}
                                                                 className="flex flex-col bg-emerald-800  rounded-lg mt-2 px-3 py-1">
@@ -128,7 +245,7 @@ export const ChatComponent = () => {
                                                                     message.fileUrl && (
                                                                         message.fileUrl.match(/.(jpeg|jpg|png)/g)
                                                                             ? (
-                                                                                
+
                                                                                 <img
                                                                                     className="rounded-lg w-full"
                                                                                     src={message.fileUrl || undefined}
@@ -138,7 +255,6 @@ export const ChatComponent = () => {
 
                                                                                 <video className="rounded-lg" controls>
                                                                                     <source src={`${message.fileUrl}`} type="video/mp4" />
-                                                                                    Ops!
                                                                                 </video>
 
                                                                             ) : null
@@ -149,10 +265,11 @@ export const ChatComponent = () => {
                                                             </div>
 
                                                         </section>
-                                                    ) : user ? (
+                                                    ) : (
                                                         <section
                                                             key={message.id}
-                                                            className={`gap-x-2 flex text-white justify-end`}>
+                                                            ref={index === messages.length - 1 ? lastElement : null}
+                                                            className={`gap-x-2 flex text-white justify-end items-start`}>
 
                                                             <div
                                                                 style={{ maxWidth: "320px" }}
@@ -182,13 +299,8 @@ export const ChatComponent = () => {
                                                                 <p className="bg-transparent text-sm break-words">{message.text}</p>
                                                             </div>
 
-                                                            <PictureComponent
-                                                                url={user.pictureUrl}
-                                                                style="w-7 h-7"
-                                                            />
-
                                                         </section>
-                                                    ) : null
+                                                    )
                                                 }
                                             </>
                                         )
@@ -200,17 +312,19 @@ export const ChatComponent = () => {
                                 onSubmit={submitHandler}
                                 className="w-full h-8 flex items-center gap-x-1 relative">
                                 <input
-                                    className="w-[460px] bg-emerald-950 h-7 text-white outline-none px-3 rounded"
+                                    className="w-[460px] bg-emerald-900 h-7 text-white outline-none px-3 rounded"
                                     placeholder="Send a message..."
                                     type="text"
                                     {...register("text")}
                                 />
 
-                                <AiFillPicture className="h-12 w-10 text-emerald-900" />
+                                <AiFillPicture className="h-12 w-10 bg-transparent text-emerald-900" />
 
                                 <button
                                     type="submit"
-                                    onClick={() => setUrl(`http://localhost:3000/chat/${selecetedUser.partner.id}/${selecetedUser.chat_id}`)}
+
+                                    onClick={() => setUrl(`http://localhost:3000/chat/${selectedChat.partner.id}/${selectedChat.chat_id}`)}
+
                                     className="text-white rounded bg-emerald-700 w-44 h-[26px] hover:bg-emerald-600 flex justify-center items-center">
                                     {
                                         loading ? (
@@ -227,10 +341,10 @@ export const ChatComponent = () => {
                                 />
                             </form>
                         </>
-                    )
+                    ) : null
                 }
 
             </section>
-        </section>
+        </section >
     )
 }

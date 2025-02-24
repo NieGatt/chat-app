@@ -7,6 +7,8 @@ import passport from "passport";
 import { Server } from "socket.io";
 import express from "express";
 import cors from "cors";
+import { joinChat } from "./socket.io/events/JoinChat";
+import { NewMessageRecovery } from "./socket.io/events/NewMessageRecovery";
 
 const app = express();
 
@@ -33,4 +35,9 @@ const io = new Server(server, {
         credentials: true
     }
 })
-export { io }
+
+
+io.on("connection", (socket) => {
+    joinChat(socket)
+    NewMessageRecovery(socket, io)
+})

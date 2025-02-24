@@ -4,10 +4,12 @@ import { ToolbarComponent } from "../components/ToolbarComponent"
 import { useState } from "react"
 
 export const Home = () => {
-    const [index, setIndex] = useState<number>(2)
+    const initialIndex = sessionStorage.getItem("ui-index")
+    const [index, setIndex] = useState<number>(initialIndex ? Number(initialIndex) : 2)
 
     const handleCodeIndex = (value: number) => {
         setIndex(value)
+        sessionStorage.setItem("ui-index", String(value))
     }
 
     return (

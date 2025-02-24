@@ -5,7 +5,7 @@ import { BadRequest } from "../../../utils/exceptions/ExceptionHandler"
 export const SendMessageController = async (req: Request, res: Response) => {
     const { id: sender_id } = req.user as { id: string }
     const { receiver_id } = req.params as { receiver_id: string }
-    const chat_id: string | undefined = req.params?.chat_id
+    const chat_id: string = req.params.chat_id
     const text: string | undefined = req.body?.text
     const filePath = req.file?.path
 

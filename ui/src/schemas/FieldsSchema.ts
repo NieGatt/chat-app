@@ -5,7 +5,7 @@ const fieldsSchema = z.object({
         z.instanceof(File)
             .refine((file) => file.size <= 100 * 1024 * 1024, "File cannot exceed 100MB")
             .refine((file) =>
-                ["image/jpeg", "image/jpg", "image/png", "image/mp4"].includes(file.type),
+                ["image/jpeg", "image/jpg", "image/png", "video/mp4"].includes(file.type),
                 "File extension does not match .jpeg, .png, .jpg, .mp4")
             .optional(),
 

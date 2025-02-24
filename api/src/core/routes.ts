@@ -8,7 +8,7 @@ import { ValidateController } from "../modules/controller/auth/ValidateControlle
 import { SendVerificationController } from "../modules/controller/auth/SendVerificationController";
 import { CookieMiddleware } from "../middlewares/CookieMiddleware";
 import { AuthMiddleware } from "../middlewares/AuthMiddleware";
-import { strictLimiterMiddleware, standardLimiterMiddleware } from "../middlewares/LimiterMiddleware";
+import { strictLimiterMiddleware, standardLimiterMiddleware, chatWritesLimiterMiddleware } from "../middlewares/LimiterMiddleware";
 import { ValidationDataMiddleware } from "../middlewares/ValidationDataMiddleware";
 import { fieldsSchema } from "../schemas/FieldsSchema";
 import { ReadUserDataController } from "../modules/controller/user/ReadUserDataControlelr";
@@ -21,6 +21,7 @@ import { RefreshTokenController } from "../modules/controller/auth/RefreshTokenC
 import { FindUserController } from "../modules/controller/user/FindUserController";
 import { FindUserChatsController } from "../modules/controller/chat/FindUserChatsController";
 import { SendMessageController } from "../modules/controller/chat/SendMessageController";
+import { CreateChatController } from "../modules/controller/chat/CreateChatController";
 
 const router = express.Router();
 
@@ -100,7 +101,7 @@ router.put("/user",
     UpdateUserController
 )
 
-router.get("/user/:name([a-zA-ZÀ-ú\\s]{3,50})",
+router.get("/user/:name([a-zA-ZÀ-ú%20]{3,50})",
     standardLimiterMiddleware, CookieMiddleware, FindUserController
 )
 
@@ -109,10 +110,14 @@ router.get("/chat",
     standardLimiterMiddleware, CookieMiddleware, FindUserChatsController
 )
 
-router.post("/chat/:receiver_id([a-f0-9-]{36})/:chat_id([a-f0-9-]{36})?",
-    standardLimiterMiddleware, CookieMiddleware, chatUpload.single("file"),
+router.post("/chat/:receiver_id([a-f0-9-]{36})/:chat_id([a-f0-9-]{36})",
+    chatWritesLimiterMiddleware, CookieMiddleware, chatUpload.single("file"),
     ValidationDataMiddleware(fieldsSchema.pick({ text: true })),
     SendMessageController
+)
+
+router.post("/chat/create/:partner_id([a-f0-9-]{36})",
+    standardLimiterMiddleware, CookieMiddleware, CreateChatController
 )
 
 export { router };

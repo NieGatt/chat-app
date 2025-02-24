@@ -16,7 +16,8 @@ export const useFormData = <T extends FieldValues>(
         handleSubmit,
         formState: { errors },
         setValue,
-        trigger
+        trigger,
+        reset
     } = useForm<T>({
         mode: "onSubmit",
         resolver: zodResolver(setSchema)
@@ -40,8 +41,9 @@ export const useFormData = <T extends FieldValues>(
     
         setStatusCode(res.status)
         setLoading(false);
+        reset()
     });
     
 
-    return { submitHandler, trigger, statusCode, loading, register, errors, setValue };
+    return { submitHandler, trigger, setStatusCode, statusCode, loading, register, errors, setValue };
 };
