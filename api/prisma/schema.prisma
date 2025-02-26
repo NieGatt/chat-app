@@ -41,10 +41,10 @@ model Message {
   createdAt DateTime  @default(now())
 
   receiver_id String @db.VarChar(36)
-  receiver    User   @relation("receiveRelation", fields: [receiver_id], references: [id], onUpdate: Cascade)
+  receiver    User   @relation("receiveRelation", fields: [receiver_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   sender_id String @db.VarChar(36)
-  sender    User   @relation("sendRelation", fields: [sender_id], references: [id], onUpdate: Cascade)
+  sender    User   @relation("sendRelation", fields: [sender_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   chat_id String @db.VarChar(36)
   chat    Chat   @relation(fields: [chat_id], references: [id], onDelete: Cascade)

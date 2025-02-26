@@ -6,13 +6,13 @@ import { PictureComponent } from "./PictureComponent"
 import { useUserData } from "../context/UserDataContext"
 import { AiFillPicture } from "react-icons/ai";
 import { fieldsSchema } from "../schemas/FieldsSchema"
-import { useFormData } from "../hooks/useFormData"
 import { AiOutlineLoading3Quarters } from "react-icons/ai"
 import { FaImage } from "react-icons/fa";
 import { IChatMessages } from "../interfaces/IChatMessages"
 import { IoIosSearch } from "react-icons/io";
 import { IFindUsers } from "../interfaces/IFindUsers"
 import { IoIosAddCircle } from "react-icons/io";
+import { useSendMessage } from "../hooks/useSendMessage"
 
 
 interface InputsMessage {
@@ -30,10 +30,12 @@ export const ChatComponent = () => {
     const chatUrl = "http://localhost:3000/chat"
     const searchUrl = `http://localhost:3000/user/${inputValue}`
 
-    const socketRef = useRef<Socket | null>(null)
     const lastElement = useRef<HTMLDivElement | null>(null)
     const { user } = useUserData()
     const schema = fieldsSchema.pick({ file: true, text: true })
+
+    let socketRef = useRef<Socket | null>(null)
+    const socket = socketRef.current
 
     const {
         data: chatData,
@@ -54,62 +56,56 @@ export const ChatComponent = () => {
         })
     }
 
-    const joinChatHandler = (chat_id: string) => {
-        const chat = chatData?.find(chat => chat.chat_id === chat_id)
-
-        if (chat) {
-            setSelectedChat(chat)
-            socketRef.current?.emit("join-chat", chat_id)
-            socketRef.current?.on("messages", (data) => {
-                setMessages(data)
-            })
-        }
-    }
-
     const {
         loading,
         register,
         submitHandler,
-        setValue,
-        statusCode,
-        setStatusCode
-    } = useFormData<InputsMessage>(schema, url, "POST")
+        setValue
+    } = useSendMessage<InputsMessage>(schema, url, socket, selectedChat?.chat_id ?? null)
+
+    const joinChatHandler = (chat_id: string) => {
+        const chat = chatData?.find(chat => chat.chat_id === chat_id)
+
+        if (chat && socket && user?.id) {
+            const data = { chat_id: chat.chat_id, user_id: user.id }
+
+            setSelectedChat(chat)
+            socket.emit("join-chat", data, (messages: IChatMessages[]) => {
+                setMessages(messages)
+            })
+        }
+    }
 
     useEffect(() => {
         socketRef.current = io("http://localhost:3000");
-        let interval: NodeJS.Timeout;
 
         if (!chatData) {
             (async () => handleChatData())()
         }
 
+        let interval: NodeJS.Timeout;
         interval = setInterval(() => {
             (async () => handleChatData())()
-        }, 30 * 1000);
+        }, 15 * 1000);
 
         return () => {
             clearInterval(interval)
+            socket?.disconnect()
         }
     }, [])
 
     useEffect(() => {
-        if (!socketRef.current) return;
+        if (!socket || !selectedChat) return;
 
-        const socket = socketRef.current
+        socket.on("new-message", (message: IChatMessages) => {
+            setMessages(prev => [...(prev || []), message]);
+        })
 
-        socket.off("new-message")
-        socket.off("new-message-recovery")
+        return (() => {
+            socket?.off("new-message")
+        })
 
-        if (statusCode === 201 && selectedChat) {
-            socket.emit("new-message-recovery", selectedChat.chat_id)
-
-            socket.on("new-message", (message: IChatMessages) => {
-                setMessages(prev => [...(prev || []), message]);
-            })
-
-            setStatusCode(0)
-        }
-    }, [statusCode, submitHandler])
+    }, [selectedChat])
 
     useEffect(() => {
         lastElement.current?.scrollIntoView({ behavior: "smooth" });
@@ -197,12 +193,12 @@ export const ChatComponent = () => {
                                             <p className="bg-transparent text-sm">{chat.partner.name}</p>
 
                                             {
-                                                chat.messages && chat.messages.sender_id !== user?.id && (
-                                                    <p className={`bg-transparent ${chat.messages.status === "SEEN" ? "" : "text-emerald-400"} text-[10px]`}>
+                                                chat.messages && chat.messages.sender_id !== user?.id && chat.messages.chat_id !== selectedChat?.chat_id && (
+                                                    <p className={`bg-transparent ${chat.messages.status === "SEEN" ? "opacity-40" : "text-emerald-400 opacity-100"} text-[10px]`}>
                                                         {
                                                             chat.messages.text ? (
-                                                                chat.messages.text.length > 30
-                                                                    ? chat.messages.text?.slice(0, 27) + "..."
+                                                                chat.messages.text.length > 25
+                                                                    ? chat.messages.text?.slice(0, 25) + "..."
                                                                     : chat.messages.text
                                                             ) : (
                                                                 <FaImage />
@@ -231,76 +227,47 @@ export const ChatComponent = () => {
                                         return (
                                             <>
                                                 {
-                                                    message.sender_id !== user?.id ? (
-                                                        <section
-                                                            key={message.id}
-                                                            ref={index === messages.length - 1 ? lastElement : null}
-                                                            className={`gap-x-2 flex text-white justify-start`}>
+                                                    <section
+                                                        key={message.id}
+                                                        ref={index === messages.length - 1 ? lastElement : null}
+                                                        className={`gap-x-2 flex text-white ${message.sender_id === user?.id ? "justify-end" : "justify-start"}`}>
+                                                        <div
+                                                            style={{
+                                                                maxWidth: "320px",
+                                                                maxHeight: "270px"
+                                                            }}
+                                                            className={`flex flex-col bg-emerald-800 rounded-lg mt-2 px-3 $ py-1`}
+                                                        >
+                                                            {message.fileUrl && (
+                                                                message.fileUrl.match(/\.(jpeg|jpg|png)$/) ? (
+                                                                    <img
+                                                                        className="rounded-lg w-full h-auto mt-3"
+                                                                        src={message.fileUrl || undefined}
+                                                                        alt="file"
+                                                                        style={{
+                                                                            objectFit: "contain",
+                                                                            maxWidth: "100%",
+                                                                            maxHeight: "220px"
+                                                                        }}
+                                                                    />
+                                                                ) : message.fileUrl.match(/\.mp4$/) ? (
+                                                                    <video
+                                                                        className="rounded-lg w-72 mt-3"
+                                                                        style={{
+                                                                            maxHeight: "220px",
+                                                                            objectFit: "contain"
+                                                                        }}
+                                                                        controls
+                                                                    >
+                                                                        <source src={message.fileUrl} type="video/mp4" />
+                                                                        Ops!
+                                                                    </video>
+                                                                ) : null
+                                                            )}
 
-                                                            <div
-                                                                style={{ maxWidth: "320px" }}
-                                                                className="flex flex-col bg-emerald-800  rounded-lg mt-2 px-3 py-1">
-
-                                                                {
-                                                                    message.fileUrl && (
-                                                                        message.fileUrl.match(/.(jpeg|jpg|png)/g)
-                                                                            ? (
-
-                                                                                <img
-                                                                                    className="rounded-lg w-full"
-                                                                                    src={message.fileUrl || undefined}
-                                                                                    alt="file" />
-
-                                                                            ) : message.fileUrl.match(/.mp4/g) ? (
-
-                                                                                <video className="rounded-lg" controls>
-                                                                                    <source src={`${message.fileUrl}`} type="video/mp4" />
-                                                                                </video>
-
-                                                                            ) : null
-                                                                    )
-                                                                }
-
-                                                                <p className="bg-transparent text-sm break-words">{message.text}</p>
-                                                            </div>
-
-                                                        </section>
-                                                    ) : (
-                                                        <section
-                                                            key={message.id}
-                                                            ref={index === messages.length - 1 ? lastElement : null}
-                                                            className={`gap-x-2 flex text-white justify-end items-start`}>
-
-                                                            <div
-                                                                style={{ maxWidth: "320px" }}
-                                                                className="flex flex-col bg-emerald-800  rounded-lg mt-2 px-3 py-1">
-
-                                                                {
-                                                                    message.fileUrl && (
-                                                                        message.fileUrl.match(/.(jpeg|jpg|png)/g)
-                                                                            ? (
-
-                                                                                <img
-                                                                                    className="rounded-lg w-full"
-                                                                                    src={message.fileUrl || undefined}
-                                                                                    alt="file" />
-
-                                                                            ) : message.fileUrl.match(/.mp4/g) ? (
-
-                                                                                <video className="rounded-lg" controls>
-                                                                                    <source src={`${message.fileUrl}`} type="video/mp4" />
-                                                                                    Ops!
-                                                                                </video>
-
-                                                                            ) : null
-                                                                    )
-                                                                }
-
-                                                                <p className="bg-transparent text-sm break-words">{message.text}</p>
-                                                            </div>
-
-                                                        </section>
-                                                    )
+                                                            <p className="bg-transparent text-sm break-words">{message.text}</p>
+                                                        </div>
+                                                    </section>
                                                 }
                                             </>
                                         )

@@ -11,7 +11,7 @@ export const SendMessageService = async (data: IChatMessage) => {
     let fileUrl = ""
 
     if (data.filePath) {
-        const foldrPath = `chat-uploads/${chat}`
+        const foldrPath = `chat-uploads/${data.chat_id}`
 
         const cloudinaryHandler = new CloudinaryHandler()
         fileUrl = await cloudinaryHandler.uploadfile(data.filePath, foldrPath)

@@ -8,6 +8,7 @@ export class CloudinaryHandler {
         const result = await cloudinary.uploader.upload(
             filePath,
             {
+                resource_type: "auto",
                 use_filename: true,
                 overwrite: true,
                 unique_filename: false,

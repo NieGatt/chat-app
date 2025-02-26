@@ -16,12 +16,10 @@ export const RegisterService = async (data: IRegisterUser) => {
 
     const newUser = await prisma.user.create({ data: { ...data } });
 
-    if (newUser) {
-        await deliverEmail({
-            name: newUser.name,
-            email: newUser.email,
-            token: verificationToken,
-            template: "email-verification"
-        });
-    }
+    await deliverEmail({
+        name: newUser.name,
+        email: newUser.email,
+        token: verificationToken,
+        template: "email-verification"
+    });
 }
