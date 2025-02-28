@@ -13,7 +13,7 @@ import { IoIosSearch } from "react-icons/io";
 import { IFindUsers } from "../interfaces/IFindUsers"
 import { IoIosAddCircle } from "react-icons/io";
 import { useSendMessage } from "../hooks/useSendMessage"
-
+import { FaUserFriends } from "react-icons/fa";
 
 interface InputsMessage {
     text?: string;
@@ -175,43 +175,47 @@ export const ChatComponent = () => {
 
                 </section>
 
-                <h1 className="font-bold mt-4">CHATS</h1>
                 <section className="flex flex-col w-full h-full mb-1 overflow-y-auto">
+                <h1 className="font-bold mt-4">CHATS</h1>
                     {
                         chatData && chatData.length > 0 ? (
 
                             chatData.map(chat => {
                                 return (
-                                    <section
-                                        key={chat.chat_id}
-                                        onClick={() => joinChatHandler(chat.chat_id)}
-                                        className={`flex mt-2 py-1 px-2 relative items-center rounded-lg ${selectedChat?.partner.id === chat.partner.id ? "bg-emerald-800" : "bg-emerald-950"} hover:bg-emerald-800`}>
+                                    <>
+                                        <section
+                                            key={chat.chat_id}
+                                            onClick={() => joinChatHandler(chat.chat_id)}
+                                            className={`flex mt-2 py-1 px-2 relative items-center rounded-lg ${selectedChat?.partner.id === chat.partner.id ? "bg-emerald-800" : "bg-emerald-950"} hover:bg-emerald-800`}>
 
-                                        <PictureComponent url={chat.partner.pictureUrl} style="w-7 h-7" />
+                                            <PictureComponent url={chat.partner.pictureUrl} style="w-7 h-7" />
 
-                                        <div className="flex flex-col w-full text-white px-2 bg-transparent">
-                                            <p className="bg-transparent text-sm">{chat.partner.name}</p>
+                                            <div className="flex flex-col w-full text-white px-2 bg-transparent">
+                                                <p className="bg-transparent text-sm">{chat.partner.name}</p>
 
-                                            {
-                                                chat.messages && chat.messages.sender_id !== user?.id && chat.messages.chat_id !== selectedChat?.chat_id && (
-                                                    <p className={`bg-transparent ${chat.messages.status === "SEEN" ? "opacity-40" : "text-emerald-400 opacity-100"} text-[10px]`}>
-                                                        {
-                                                            chat.messages.text ? (
-                                                                chat.messages.text.length > 25
-                                                                    ? chat.messages.text?.slice(0, 25) + "..."
-                                                                    : chat.messages.text
-                                                            ) : (
-                                                                <FaImage />
-                                                            )
-                                                        }
-                                                    </p>
-                                                )
-                                            }
-                                        </div>
-                                    </section>
+                                                {
+                                                    chat.messages && chat.messages.sender_id !== user?.id && chat.messages.chat_id !== selectedChat?.chat_id && (
+                                                        <p className={`bg-transparent ${chat.messages.status === "SEEN" ? "opacity-40" : "text-emerald-400 opacity-100"} text-[10px]`}>
+                                                            {
+                                                                chat.messages.text ? (
+                                                                    chat.messages.text.length > 25
+                                                                        ? chat.messages.text?.slice(0, 25) + "..."
+                                                                        : chat.messages.text
+                                                                ) : (
+                                                                    <FaImage />
+                                                                )
+                                                            }
+                                                        </p>
+                                                    )
+                                                }
+                                            </div>
+                                        </section>
+                                    </>
                                 )
                             })
-                        ) : null
+                        ) : <div className="text-xs rounded-lg bg-emerald-950 mt-2 flex justify-center items-center h-10">
+                            No chats available
+                        </div>
                     }
                 </section>
             </section>
@@ -236,7 +240,7 @@ export const ChatComponent = () => {
                                                                 maxWidth: "320px",
                                                                 maxHeight: "270px"
                                                             }}
-                                                            className={`flex flex-col bg-emerald-800 rounded-lg mt-2 px-3 $ py-1`}
+                                                            className={`flex flex-col ${message.sender_id === user?.id ? "bg-emerald-800" : "bg-emerald-950 border border-emerald-900"} rounded-lg mt-2 px-3 $ py-1`}
                                                         >
                                                             {message.fileUrl && (
                                                                 message.fileUrl.match(/\.(jpeg|jpg|png)$/) ? (

@@ -1,5 +1,6 @@
 import "dotenv/config";
 import "express-async-errors";
+import "../cron-job/clean-uploads"
 import { GlobalHandler } from "../utils/exceptions/GlobalHandler";
 import { router } from "./routes";
 import cookieParser from "cookie-parser";

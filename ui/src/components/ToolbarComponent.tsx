@@ -1,4 +1,3 @@
-import { IoMdHome } from "react-icons/io";
 import { IoMdLogOut } from "react-icons/io";
 import { IoChatbubbleEllipses } from "react-icons/io5";
 import { IoSettings } from "react-icons/io5";
@@ -28,25 +27,20 @@ export const ToolbarComponent = ({
     return (
         <>
             <div className="h-full w-12 bg-black bg-opacity-20 flex flex-col items-center justify-between gap-y-8 py-5">
-            <PictureComponent url={user && user.pictureUrl} style="w-8 h-8" />
+                <PictureComponent url={user && user.pictureUrl} style="w-8 h-8" />
 
                 <div className="bg-transparent flex flex-col gap-y-3">
-                    <IoMdHome
-                        onClick={() => handleClick(2)}
-                        className={`h-5 w-5 ${index === 2 ? "text-teal-500" : "text-teal-800"} bg-transparent`} />
-
                     <IoChatbubbleEllipses
-                        onClick={() => handleClick(3)}
-                        className={`h-4 w-4 ${index === 3 ? "text-teal-500" : "text-teal-800"} bg-transparent`} />
+                        onClick={() => handleClick(1)}
+                        className={`h-4 w-4 ${index === 1 ? "text-teal-500" : "text-teal-800"} bg-transparent`} />
 
+                    <IoSettings
+                        onClick={() => handleClick(2)}
+                        className={`h-4 w-4 ${index === 2 ? "text-teal-300" : "text-teal-800"} bg-transparent`} />
                 </div>
 
                 <div className="flex flex-col bg-transparent">
                     <button>
-                        <IoSettings
-                            onClick={() => handleClick(4)}
-                            className={`h-4 w-4 ${index === 4 ? "text-teal-300" : "text-teal-800"} bg-transparent`} />
-
                         <IoMdLogOut
                             onClick={async () => await handleLogout()}
                             className={`bg-transparent h-4 w-4 mt-3 text-teal-800 hover:text-teal-300`} />

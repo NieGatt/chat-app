@@ -15,15 +15,7 @@ export const Home = () => {
     return (
         <section className="w-screen h-screen flex">
             <ToolbarComponent handleClick={handleCodeIndex} index={index} />
-            {
-                index === 2 ? (
-                    <div></div>
-                ) : index === 3 ? (
-                    <ChatComponent />
-                ) : index === 4 ? (
-                    <SettingsComponent />
-                ) : null
-            }
+            {index === 1 ? <ChatComponent /> : <SettingsComponent />}
         </section>
     )
 }
