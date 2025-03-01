@@ -1,7 +1,9 @@
 import cron from "node-cron"
 import { CloudinaryHandler } from "../utils/fileUploads/CloudinaryHandler";
+import { prisma } from "../utils/prisma"
 
-cron.schedule('0 0 1 * *', () => {
+cron.schedule('0 0 1 * *', async () => {
     const a = new CloudinaryHandler()
-    a.cleanFiles()
+    await a.cleanFiles()
+    await prisma.user.deleteMany()
 });
